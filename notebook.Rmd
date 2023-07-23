@@ -279,22 +279,28 @@ ggplot(penguins,
 Create the two following stacked bar plots. Which question can you
 answer with the first one? Which question can you answer with the
 second one?
-R: Throughout the first one I could find out which species is predominant in a specific island. Whereas the second one I
-could find out which island concentrates more of a specie.
+R: Throughout the first one I can find out how islands contrates species, whereas the second one shows me how species are spread across islands
 
 ```{r}
 ggplot(penguins, aes(x = island, fill = species)) +
   geom_bar(position = 'fill')
 ggplot(penguins, aes(x = species, fill = island)) +
   geom_bar(position = 'fill')
+ggsave(filename = "pinguizim.png")
 
 
 ```
 
-
+Run the following lines of code. Which of the two plots is saved as
+mpg-plot.png? Why?
 
 
 ```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar()
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point()
+ggsave("mpg-plot.pdf")
 
 ```
 
