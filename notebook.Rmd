@@ -1,0 +1,113 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+```{r}
+renv::restore()
+```
+
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(ggthemes)
+```
+
+
+```{r}
+df0 <- data.frame(penguins)
+```
+
+
+
+```{r}
+#1
+
+dim(df0)
+
+```
+
+
+```{r}
+#3
+
+ggplot(
+  data=df0,
+  mapping=aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)", color = "Species", shape = "Species") + 
+  scale_color_colorblind()
+```
+
+
+```{r}
+# 1) Exercices
+dim(df0)
+
+# 2) Scatterplot
+ggplot(
+  data = df0,
+  mapping = aes(y = bill_depth_mm, x = bill_length_mm)
+) + 
+  geom_point(mapping = aes(color = species, shape=species)) +
+  geom_smooth(method='lm') +
+  labs(
+    title = "Depth vs Length",
+    subtitle = "Comparison",
+    caption = "Data come from palmerpenguins package"
+  ) +
+  scale_color_colorblind()
+
+# 3)
+ggplot(
+  data = df0,
+  mapping = aes( x = species, y = bill_depth_mm)
+) +
+  geom_bar(
+    stat="identity", 
+    mapping=aes(fill=species)) +
+  scale_color_colorblind()
+
+# 5)
+  ggplot(data = penguins, mapping = aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point()
+# I need to mapp the aesthetics
+  
+# 6) The na.ar argument silences the missings removal.
+  ggplot(data = penguins, mapping = aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point(na.rm=TRUE)
+  
+# 7) Added caption to bottom right place
+  
+# 8)
+  ggplot(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) + 
+    geom_point(mapping = aes(colour=bill_depth_mm)) +
+    geom_smooth( method="gam", formula = y~s(x) )
+
+# 9) O Geom_smooth é todinho mapeado,mesma cor, no global level
+  ggplot(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) + 
+    geom_point(mapping = aes(color = island)) +
+    geom_smooth( se = FALSE )
+
+```
+
+```{r}
+
+renv::paths$cache()
+```
+
