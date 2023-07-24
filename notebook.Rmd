@@ -304,4 +304,16 @@ ggsave("mpg-plot.pdf")
 
 ```
 
+```{r}
+this_is_a_really_long_name <- 2.5
+  
+```
+
+```{r}
+seq(3,6)
+```
+
+```{r}
+x <- "Hello
+```
 
