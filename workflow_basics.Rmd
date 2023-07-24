@@ -205,5 +205,22 @@ flights |>
   slice_max(arr_delay, n = 2, with_ties = FALSE) |> 
   relocate(dest, arr_delay)
 
+daily <- flights |> 
+  group_by(year, month, day)
+
+daily
+
+daily_flights <- daily |> 
+  summarize( n = n(), .groups="keep") |> 
+  ungroup()
+
+daily_flights
+
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm=TRUE),
+    n = n(),
+    .by = c(year, month)
+  )
 ```
 
