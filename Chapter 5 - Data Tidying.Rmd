@@ -1,0 +1,78 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+```{r}
+renv::restore()
+```
+
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+
+# 1.0 Tidy Data
+
+Exercises
+
+1) table 1: represents cases and country population per country and year
+   table 2: each observation represents a country, year and specific indicator (cases or population). The three first columns are categorical about the count color
+   table 3: each observation represents a rate of TB case per year and country.
+
+
+2) table 1: I would use mutate
+   table 2: I would pivot type and count, them merge
+   table 3: I would split the rate column into two strings, using the / as delimitator, then I would name the columns
+
+# 2.0 Lengthening Data
+
+```{r}
+billboard_longer <- billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |> 
+  mutate(
+    week = parse_number(week)
+  )
+billboard_longer
+```
+
+
+```{r}
+billboard_longer |> 
+  ggplot(aes(x = week, y = rank)) +
+  geom_line(alpha = 0.25, aes(group = track)) +
+  scale_y_reverse()
+```
+
+```{r}
+df <- tribble(
+~id, ~bp1, ~bp2,
+"A", 100, 120,
+"B", 140, 115,
+"C", 120, 125
+)
+df
+```
+
+
+
+
+```{r}
+df |> 
+  pivot_longer(
+    cols = bp1:bp2,
+    names_to = "measurement",
+    values_to = "value"
+  )
+```
+
