@@ -6,6 +6,8 @@ output: html_notebook
 
 # 0.0 Imports
 
+
+
 ```{r}
 renv::restore()
 ```
@@ -16,8 +18,95 @@ library(tidyverse)
 library(nycflights13)
 ```
 
+#1.0 Reading from a data file
+
+
 ```{r}
-students <- read_csv("https://pos.it/r4ds-students-csv")
+students <- read_csv("https://pos.it/r4ds-students-csv", na = c("N/A", ""))
 head(students)
 ```
+
+```{r}
+students |>
+  rename(
+    age = AGE
+    )
+```
+
+## clean column names
+
+```{r}
+students1 <- students |> 
+  janitor::clean_names() |> 
+    mutate(
+    meal_plan = factor(meal_plan)
+    )
+students1
+```
+
+## convert dtypes
+
+
+```{r}
+students1 <- students |> 
+  janitor::clean_names() |> 
+  mutate(
+    meal_plan = factor(meal_plan),
+    age = parse_number(if_else(age == "five", "5", age))
+  )
+students1
+```
+
+## Other arguments
+
+```{r}
+read_csv(
+"a,b,c
+1,2,3
+4,5,6",
+col_names = c("x", "y", "z")
+)
+```
+
+## Exercises
+
+```{r}
+# 1) I would use read_delim() with | as delimiter
+
+# 2) All arguments are common between these two functions
+
+# 3) The most important argument to read_fwf() is col_position
+
+# 4) 
+
+read_csv("x,y\n1,'a,b'",
+         quote = "\'"
+         )
+
+read_csv("a,b\n1,2,3\n4,5,6")
+#a column is missing because the first value of the first row is missing
+
+read_csv("a,b,c\n1,2\n1,2,3,4")
+# because there is a additional value in the third column, it had parsed with the last value
+
+
+read_csv("a,b
+         1")
+# there is a backlash with double quotes which messed the entire column
+
+
+read_csv("a,b\n1,2\na,b")
+# Mixed column times
+
+read_csv("a;b\n1;3")
+# Incorrect delimiter
+
+annoying <- tibble(
+`1` = 1:10,
+`2` = `1` * 2 + rnorm(length(`1`))
+)
+
+```
+
+
 

@@ -1772,10 +1772,11 @@ library(nycflights13)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>#1.0 Reading from a data file</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudHMgPC0gcmVhZF9jc3YoXCJodHRwczovL3Bvcy5pdC9yNGRzLXN0dWRlbnRzLWNzdlwiKVxuYGBgIn0= -->
-<pre class="r"><code>students &lt;- read_csv(&quot;https://pos.it/r4ds-students-csv&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudHMgPC0gcmVhZF9jc3YoXCJodHRwczovL3Bvcy5pdC9yNGRzLXN0dWRlbnRzLWNzdlwiLCBuYSA9IGMoXCJOL0FcIiwgXCJcIiwgXCJOQVwiKSlcbmBgYCJ9 -->
+<pre class="r"><code>students &lt;- read_csv(&quot;https://pos.it/r4ds-students-csv&quot;, na = c(&quot;N/A&quot;, &quot;&quot;, &quot;NA&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiUm93czogNiBDb2x1bW5zOiA14pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICg0KTogRnVsbCBOYW1lLCBmYXZvdXJpdGUuZm9vZCwgbWVhbFBsYW4sIEFHRVxuZGJsICgxKTogU3R1ZGVudCBJRFxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
 <pre><code>Rows: 6 Columns: 5── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -1788,10 +1789,129 @@ dbl (1): Student ID
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhZChzdHVkZW50cylcbmBgYCJ9 -->
 <pre class="r"><code>head(students)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NSwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyI2IMOXIDUiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFCcVZTd1U0Yk1SQjFzdG1VckJwQWhRTkgvMEMyaHhiYVd4c2FRcWtpaEVncmNSMTJ2WW1GWXlPdm5iQ2MrQnQrZ2hzL3hMa0hZSnpZbEs3VVUwZnl6dXliR2MrYjhad096ajRrWndraEpDS3Raa1NpR0UwUy8vbzU3SDBtaU9CUGc3Ukl4K2tyRE5weVhqenJlTnBmSHNoU3ZoS3YxN3plOUhyYjZ4MFN4SG5hL3NMMXNaVmMwTysyS0dZZ3BVZmY3b1BPQkZSMFZMMWczUjlRTVpscmNDQUxnU09tSkQxVlpja2w5OWptdHluUE9ac3NMQjFZZWNFRUlUY08zemk4djVzemVYOUwrOFp3QVRVbTc4Wkd3K0tjYVYzUlNrMm1WcHRRWktpWnpLYTAwSnlWSG91TzMvZTkyZW1qVTgzLytPSVRmbjBOd1h1VU1acHBCck5hdldSazNhVktpdXFmeU5ZK0psNFVVQm9LTXFmQytmODMrRzhXalkvQjJBM0dKOGY2Q2NVRHJZTFB3N3diZTdXRmlDWE1zUEhWcFhFb056WTJaOUxRbzBHWXd0QUtRWTh4TnJ4N0FYTmxOVGNzTFpUS1BibzJZeUJPQklRM2ovcUhCN1dDSGEwV2FTamF4ZE84d1EreS9WMW5oZ3RVQm1ZQlRISXdrQmJhRVNIa3NaYnlSbDBhcmlRbU5jT092MDV1NkJxd1lhVmprdmV5S1M1YXp3MHVXYnBYMHZWMis1VWRyMG8ybjJvamF6TTU0UzlySFFzNHg3MzFvOEtPbHcybmw1ckxzSlFKb21WcWxJRVFsMlJLQkdUWkczbDhCamxJOWZUYUF3QUEifQ== -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NSwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyI2IMOXIDUiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFCcVZTelc0VE1SQjJmalkwSzFJaXlvR2pYeUFyRUw4M1NCdFNpaUpVTlNEMU90MzFKbFlkdS9MYVNiZW52ZzB2d2EwdnhKbER5M2hqVjhVU0owYnl6dXczTTU0ZmZ5ZVQwMWZwYVVvSTZaQnV1ME02Q1pvaytmNXRPbnBQRU1HZkZ1bVN2dE9YR0xUbnZIaDI4ZlErL0NLTmZDUmU3M2c5OVBxWjE4OUpFT2ZwK1F0MzUxWnlRVC9ic2x5QmxCNTl2QTg2RjFEVFdYMlBEYjVBeldTaHdZRXNCTTZZa3ZSRVZSV1gzR1BEZ3lVdk9GdHNMSjFZZWM0RUlkY09mM0o0ODNQTjVNMFBPamFHQzRnNmVUbzNHalpuVE91YTFtcXh0TnFFSWxQTlpMNmtwZWFzd3YvK0hZcjM5Y2ZvVVd2bjJBTEpNYis2Z3VBOXlobk5OWU5WVkN5ZFdYZWprcUwrSjdLM2o0bm5KVlNHZ2l5b2NQNy9EZjY3aTlicllMd0p4cnRvdm03SjEySFpyYmNSR3hJSnEyWWp3NFlSdnR6YzJJSkpRNDhtWVF0VEt3VDlpckhoMFV0WUs2dTVZVm1wVk9IUm5SVURjU3dnUEhobmZQZ3BLdGpYYXBPRm9nTTg3V3Y4WUxlLzQ4NlFQVlhvTElCcEFRYXlVcnRHQ0xtTlVoNnBDOE9WeEtSMklQakQ1SmFPZ0tHVnJwTmlsQytSWmFPWEwxeUZ4citWZ2JkN0QreGtXN045Risyc3grU0MzNU02RVhDR3JQVzd3cEdiaWJNTHpXV2daSXBvbFJsbElNU2x1UklCYVlZanQzOEF5VnRzNTlnREFBQT0ifQ== -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Student ID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Full Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["favourite.food"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mealPlan"],"name":[4],"type":["chr"],"align":["left"]},{"label":["AGE"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"Sunil Huffmann","3":"Strawberry yoghurt","4":"Lunch only","5":"4"},{"1":"2","2":"Barclay Lynn","3":"French fries","4":"Lunch only","5":"5"},{"1":"3","2":"Jayendra Lyne","3":"N/A","4":"Breakfast and lunch","5":"7"},{"1":"4","2":"Leon Rossini","3":"Anchovies","4":"Lunch only","5":"NA"},{"1":"5","2":"Chidiegwu Dunkel","3":"Pizza","4":"Breakfast and lunch","5":"five"},{"1":"6","2":"Güvenç Attila","3":"Ice cream","4":"Lunch only","5":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+{"columns":[{"label":["Student ID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Full Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["favourite.food"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mealPlan"],"name":[4],"type":["chr"],"align":["left"]},{"label":["AGE"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"Sunil Huffmann","3":"Strawberry yoghurt","4":"Lunch only","5":"4"},{"1":"2","2":"Barclay Lynn","3":"French fries","4":"Lunch only","5":"5"},{"1":"3","2":"Jayendra Lyne","3":"NA","4":"Breakfast and lunch","5":"7"},{"1":"4","2":"Leon Rossini","3":"Anchovies","4":"Lunch only","5":"NA"},{"1":"5","2":"Chidiegwu Dunkel","3":"Pizza","4":"Breakfast and lunch","5":"five"},{"1":"6","2":"Güvenç Attila","3":"Ice cream","4":"Lunch only","5":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudHMgfD5cbiAgcmVuYW1lKFxuICAgIGFnZSA9IEFHRVxuICAgIClcbmBgYCJ9 -->
+<pre class="r"><code>students |&gt;
+  rename(
+    age = AGE
+    )</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInNwZWNfdGJsX2RmIiwidGJsX2RmIiwidGJsIiwiZGF0YS5mcmFtZSJdLCJucm93Ijo2LCJuY29sIjo1LCJzdW1tYXJ5Ijp7IkEgdGliYmxlIjpbIjYgw5cgNSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJxVlN6VTRiTVJCMmZqYVFWVU9qd3FGSHYwQldxdWpmcllWR0tWUlJoVWdyY1IxMnZZbUZZeU92blhRNThUYThSRys4RUdjTzBQSEdSdFJTVHgzSk83UGZ6SGgrL0oyT3ovYlRzNVFRMGlIZGRvZDBFalJKOHZQSFpQU1JJSUkvTGRJbGZhZC9ZZEN1OCtMWndkUDdkRWNhK1V5ODN2WjY2UFdlMTY5SkVPZnArUXQzWmxaeVFZOXNXUzVCU28rK09BU2RDNmpwdEg3Q0J0K2dackxRNEVBV0FxZE1TWHFxcW9wTDdySGhsd1V2T0p1dkxSMWJlY0VFSWRjT2YvbjE5dmVLeWRzYmVtQU1GeEIxOG1wbU5LelBtZFkxcmRWOFliVUpSU2FheVh4QlM4MVpoZi85UnhUdjZ4K2dSNjJjWXdNa0ovenFDb0wzT0djMDF3eVdVYkYwYXQyTlNvcjZuOGp1SVNaZWxGQVpDcktnd3ZuL04vanZMbHB2Zy9FdUdCK2krYm9sWDRWbHQ5NUhiRWdrTEp1TkRCdEcrSEl6WXdzbURUMGVoeTFNckJEME84YUdSeTlocGF6bWhtV2xVb1ZIdDVjTXhJbUE4T0FkbUxPb1lGK3JkUmFLRHZDMHIvR0QzZDdIblNGN3F0QlpBTk1DREdTbGRvMFE4aENsYktsTHc1WEVwSFlnK1BQa2xvNkFvWld1azJLVUw1QmxvemY3cmtMajM4akEyNzFuZHJLcDJYNk1kdFpqY3M2ZlNKMElPRWZXK2wzaHlNM0UyYVhtTWxBeVJiVEtqRElRNHRKY2lZQTB3NUdIUC9ucDBLallBd0FBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Student ID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Full Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["favourite.food"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mealPlan"],"name":[4],"type":["chr"],"align":["left"]},{"label":["age"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"Sunil Huffmann","3":"Strawberry yoghurt","4":"Lunch only","5":"4"},{"1":"2","2":"Barclay Lynn","3":"French fries","4":"Lunch only","5":"5"},{"1":"3","2":"Jayendra Lyne","3":"NA","4":"Breakfast and lunch","5":"7"},{"1":"4","2":"Leon Rossini","3":"Anchovies","4":"Lunch only","5":"NA"},{"1":"5","2":"Chidiegwu Dunkel","3":"Pizza","4":"Breakfast and lunch","5":"five"},{"1":"6","2":"Güvenç Attila","3":"Ice cream","4":"Lunch only","5":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="clean-column-names" class="section level2">
+<h2>clean column names</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudHMxIDwtIHN0dWRlbnRzIHw+IFxuICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpIHw+IFxuICAgIG11dGF0ZShcbiAgICBtZWFsX3BsYW4gPSBmYWN0b3IobWVhbF9wbGFuKVxuICAgIClcbnN0dWRlbnRzMVxuYGBgIn0= -->
+<pre class="r"><code>students1 &lt;- students |&gt; 
+  janitor::clean_names() |&gt; 
+    mutate(
+    meal_plan = factor(meal_plan)
+    )
+students1</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NSwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyI2IMOXIDUiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFCbDFTdlc3Yk1CQ21KTXVwaFNZMW1nNGQrUUwya1A1dWJkSWcvWUdISW1tQmJNWkZvbXdpTkdsUWxGeGx5dHZrSmJybGhUcDNTSHEwZVVZdEF0UWR2enZkZC94NDU2ZVhyN0xMakRHV3NGNmNzQ1JGbDZVL2Y1eU4zak5FOEJDeEhodDQrd3VURG4wVTl3SHUvb2MvYkwwK3NtQ2ZCRHNNOWtXd0x4a3RIK21IZ2djWHRaYUtmNm5MY2dGYUIvVHBDZGhjUWNzbjdSYmIvd2F0MElVRkR3cEtuQWlqK2JtcEtxbGx3SWFmNXJLUVlyYXErV210cjRWaTdOYmp6ejdmLzI2RXZyL2p4ODVKQloxT25sODRDNnNyWVczTFd6T2IxOVlSeVprVk9wL3owa3BSNFhud2lDdkVCc2NZTVkwUGJJRDB1N3k1QVlwK3pRWFByWUFGeXJhL0ptTXNEanZhdFRzNjk1Vm9oS3BDaTNGQUQwK3cxSFVKbGVPZ0M2NXE1QTZoYk9JUDNHalZka3FsS0dSRmxiYjFTOGlkc2VnOWRHU0lYcFB6aHB4M25UdjNTdG5RQTBSdnUzUWFGb0xvVXVxdWNuVWh0SnZLZ3BRcGE2V21QcGNHb1lURzFGWTZNUzJOMmFZdEJLanBVZ0ZOUVFJejBXRWNXTE1hRTZzWE9iN0ZEN2I3ZDVPWVBIWXVueFhnWUZ4YVQ3NFdZS2ZjbmxrNmFUUVdpMm5RLy84NXNoMWdXR3RQWG96eU9VN2I2T2pJTTRSblphR2pLRHc5K2VtR3MwZWRrVTU5b1dkeU85eXBnaXVjM3FBUDNuSjl5ZkhTU2syam1TRmFqWjF4UUhsWmJoUWhtOWQ5K0FjQWJxc0M0QU1BQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["student_id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["full_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["favourite_food"],"name":[3],"type":["chr"],"align":["left"]},{"label":["meal_plan"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["age"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"Sunil Huffmann","3":"Strawberry yoghurt","4":"Lunch only","5":"4"},{"1":"2","2":"Barclay Lynn","3":"French fries","4":"Lunch only","5":"5"},{"1":"3","2":"Jayendra Lyne","3":"NA","4":"Breakfast and lunch","5":"7"},{"1":"4","2":"Leon Rossini","3":"Anchovies","4":"Lunch only","5":"NA"},{"1":"5","2":"Chidiegwu Dunkel","3":"Pizza","4":"Breakfast and lunch","5":"five"},{"1":"6","2":"Güvenç Attila","3":"Ice cream","4":"Lunch only","5":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="convert-dtypes" class="section level2">
+<h2>convert dtypes</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3R1ZGVudHMxIDwtIHN0dWRlbnRzIHw+IFxuICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpIHw+IFxuICBtdXRhdGUoXG4gICAgbWVhbF9wbGFuID0gZmFjdG9yKG1lYWxfcGxhbiksXG4gICAgYWdlID0gcGFyc2VfbnVtYmVyKGlmX2Vsc2UoYWdlID09IFwiZml2ZVwiLCBcIjVcIiwgYWdlKSlcbiAgKVxuc3R1ZGVudHMxXG5gYGAifQ== -->
+<pre class="r"><code>students1 &lt;- students |&gt; 
+  janitor::clean_names() |&gt; 
+  mutate(
+    meal_plan = factor(meal_plan),
+    age = parse_number(if_else(age == &quot;five&quot;, &quot;5&quot;, age))
+  )
+students1</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NSwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyI2IMOXIDUiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFCbVZTelc0VE1SQjJkck1wV2RFU1VRNGNPUGdGa2dNYzRBWXRWZmxSRHFnRnFiZG91bXNuVmgwNzh0b0oyd3Q5Rmk2OEJMZStFR2NPTGVOZE95SmJTOTZ4djVtZGJ6emZuSjFjdk1vdmNrSklTdnBKU3RJTWp5VDc5dlYwL0lZZ2dwY2U2Wk9odDk4eDZOQjdjUi9nSHJ6OVE1cjFqZ1Q3S05oUnNNK0NmVTdpOHA1QlNIaHc3cFNROUtQamZBbEtCZlR4TVpoQ1FrMm45UmJiL3d3MVU2VUJEN0lZT0dWYTBUTmRWVUtKZ0kzZUwwUXAySHpqNklsVFYwd1NjdVB4Sng5dWY2K1p1djFGajZ3VkVqcVZQRDIzQmphWHpKaWExbnErY01aR2tsUERWTEdnM0FoVzRYMTRqeXY0aGtmbzBXdnZhSUhzaTdpK2h1ajlWREJhR0FaTGJOdCtRMFpJRW5adjErNzBlU0RabXNrcWxKZ0U5UEFZVTExeHFDd0ZWVkxwa0R1NDhxbS9VSzFrM1VtVllTT3JtR21ibjBOaHRjSFRYUlR5Z1dBdld2dWpFWGp2NTBNaGQya1VMRm1reVdKVmxYVWxVM1lteXRnUjdxU2MrZGc0QUJ6VzJobGgyWXhydlExYk1wQ3psWVNvZmdwejFtRWNHcjJaUkZiZjNPUUdQeWpOM3pZd3ZlODhPaS9Cd29RYlQ5NDhmQ2Zkbmw1Wm9SVW1TK0tBLy85enozU0FrVk9ldkJ3WEM1eXk4Y3ZYbmlISVNVSkZ2U0I1UEdjdFp6OVdGdnMwWUdvdXRrT2RTYmpFcVEzOXdWYzJqNXlzakZCeEpITkVxNG5WRm1KY1htZ1prVmJWdTM4bDBLK2wyQU1BQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["student_id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["full_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["favourite_food"],"name":[3],"type":["chr"],"align":["left"]},{"label":["meal_plan"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["age"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"Sunil Huffmann","3":"Strawberry yoghurt","4":"Lunch only","5":"4"},{"1":"2","2":"Barclay Lynn","3":"French fries","4":"Lunch only","5":"5"},{"1":"3","2":"Jayendra Lyne","3":"NA","4":"Breakfast and lunch","5":"7"},{"1":"4","2":"Leon Rossini","3":"Anchovies","4":"Lunch only","5":"NA"},{"1":"5","2":"Chidiegwu Dunkel","3":"Pizza","4":"Breakfast and lunch","5":"5"},{"1":"6","2":"Güvenç Attila","3":"Ice cream","4":"Lunch only","5":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="other-arguments" class="section level2">
+<h2>Other arguments</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVhZF9jc3YoXG5cImEsYixjXG4xLDIsM1xuNCw1LDZcIixcbmNvbF9uYW1lcyA9IGMoXCJ4XCIsIFwieVwiLCBcInpcIilcbilcbmBgYCJ9 -->
+<pre class="r"><code>read_csv(
+&quot;a,b,c
+1,2,3
+4,5,6&quot;,
+col_names = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;)
+)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMyBDb2x1bW5zOiAz4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgzKTogeCwgeSwgelxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
+<pre><code>Rows: 3 Columns: 3── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (3): x, y, z
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInNwZWNfdGJsX2RmIiwidGJsX2RmIiwidGJsIiwiZGF0YS5mcmFtZSJdLCJucm93IjozLCJuY29sIjozLCJzdW1tYXJ5Ijp7IkEgdGliYmxlIjpbIjMgw5cgMyJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMlEzUTZDTUF5Rkt6aU5KQm9UbndPaW9zWUhNRDZBMGNUYmlhaEUzQXpNK0hQbGl5dDJRQzhzeWRqWHM1NjEzV3F4RGIydEJ3QXVOQjBYWElFSVlyTmUrbk5BQllNR05LRmo5d2NtRGNwTWdIN2xxQTRrd1loZ3dsTjJCR09DS1UrSkNFS0NHZXRBS0htSmMrNTdFRHdKWHN6WHlmUTlJRzhYbC9QR1gxRVVIMTRnU21WT0JVajA5dExJNEpDaEg2TXZzN1QxMVNSYW9jbXhieU9ZdVpFeG9YOVR0cE85SDUxdTZ1eUhRMXVoUEsrK2JzM3VQOXVhVGxIZkplcTdXckU2SmlxbTVsTzVpOU02Nk9ISTVjVEJOVXVVb1ZGUXpRT2pqYVE4TDlJcEtlVnc4UDBCWnh3Q1l4TUNBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["chr"],"align":["left"]},{"label":["y"],"name":[2],"type":["chr"],"align":["left"]},{"label":["z"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"a","2":"b","3":"c"},{"1":"1","2":"2","3":"3"},{"1":"4","2":"5","3":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[3]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVhZF9jc3YoXCJhLGJcbiAgICAgICAgIDFcIilcblxuYGBgIn0= -->
+<pre class="r"><code>read_csv(&quot;a,b
+         1&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVJvd3M6IDEgQ29sdW1uczogMuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmRibCAoMSk6IGFcbmxnbCAoMSk6IGJcbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)Rows: 1 Columns: 2── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+dbl (1): a
+lgl (1): b
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInNwZWNfdGJsX2RmIiwidGJsX2RmIiwidGJsIiwiZGF0YS5mcmFtZSJdLCJucm93IjoxLCJuY29sIjoyLCJzdW1tYXJ5Ijp7IkEgdGliYmxlIjpbIjEgw5cgMiJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMlAwUXFDTUJTR2o5b0tCVVBvT1JRaWd1NjZpUjRnQ3J4ZFppWFpKanFweXg2NUo5RE9iQWRxdTlsL2ZzNzNiLzl1a3k2Q05BQUFEMGF1Qng1RENleXczOFlyUUFjSEIwYmc2L3VKU3pNVTJweHFZLzBHT2pyQmVRM3lEMktDMy9NR1JUU0FKb21UT0ZycmZpMGZDU0doUm5SbWo4Zk96VXJlVUM2WndZa3JucHhyNUhIcUxHUWlLMVZJZ1pDcld6QUxkbXJMaUZxaGYzS0tzMnNyYnZGeVRqVk41ZEJvNTBlNzN6ZmQzbVF4a3pYT3hhVVFPWDIrNU1lOE5NTVVLdytOazZvdWhLSXE2RGFKa29yVFhwREprcHloSEhRZmlrU244TDBCQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["a"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b"],"name":[2],"type":["lgl"],"align":["right"]}],"data":[{"1":"1","2":"NA"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -1799,8 +1919,9 @@ dbl (1): Student ID
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCiMgMC4wIEltcG9ydHMNCg0KYGBge3J9DQpyZW52OjpyZXN0b3JlKCkNCmBgYA0KDQoNCmBgYHtyfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KG55Y2ZsaWdodHMxMykNCmBgYA0KDQpgYGB7cn0NCnN0dWRlbnRzIDwtIHJlYWRfY3N2KCJodHRwczovL3Bvcy5pdC9yNGRzLXN0dWRlbnRzLWNzdiIpDQpoZWFkKHN0dWRlbnRzKQ0KYGBgDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCiMgMC4wIEltcG9ydHMNCg0KDQoNCmBgYHtyfQ0KcmVudjo6cmVzdG9yZSgpDQpgYGANCg0KDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShueWNmbGlnaHRzMTMpDQpgYGANCg0KIzEuMCBSZWFkaW5nIGZyb20gYSBkYXRhIGZpbGUNCg0KDQpgYGB7cn0NCnN0dWRlbnRzIDwtIHJlYWRfY3N2KCJodHRwczovL3Bvcy5pdC9yNGRzLXN0dWRlbnRzLWNzdiIsIG5hID0gYygiTi9BIiwgIiIpKQ0KaGVhZChzdHVkZW50cykNCmBgYA0KDQpgYGB7cn0NCnN0dWRlbnRzIHw+DQogIHJlbmFtZSgNCiAgICBhZ2UgPSBBR0UNCiAgICApDQpgYGANCg0KIyMgY2xlYW4gY29sdW1uIG5hbWVzDQoNCmBgYHtyfQ0Kc3R1ZGVudHMxIDwtIHN0dWRlbnRzIHw+IA0KICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpIHw+IA0KICAgIG11dGF0ZSgNCiAgICBtZWFsX3BsYW4gPSBmYWN0b3IobWVhbF9wbGFuKQ0KICAgICkNCnN0dWRlbnRzMQ0KYGBgDQoNCiMjIGNvbnZlcnQgZHR5cGVzDQoNCg0KYGBge3J9DQpzdHVkZW50czEgPC0gc3R1ZGVudHMgfD4gDQogIGphbml0b3I6OmNsZWFuX25hbWVzKCkgfD4gDQogIG11dGF0ZSgNCiAgICBtZWFsX3BsYW4gPSBmYWN0b3IobWVhbF9wbGFuKSwNCiAgICBhZ2UgPSBwYXJzZV9udW1iZXIoaWZfZWxzZShhZ2UgPT0gImZpdmUiLCAiNSIsIGFnZSkpDQogICkNCnN0dWRlbnRzMQ0KYGBgDQoNCiMjIE90aGVyIGFyZ3VtZW50cw0KDQpgYGB7cn0NCnJlYWRfY3N2KA0KImEsYixjDQoxLDIsMw0KNCw1LDYiLA0KY29sX25hbWVzID0gYygieCIsICJ5IiwgInoiKQ0KKQ0KYGBgDQoNCiMjIEV4ZXJjaXNlcw0KDQpgYGB7cn0NCiMgMSkgSSB3b3VsZCB1c2UgcmVhZF9kZWxpbSgpIHdpdGggfCBhcyBkZWxpbWl0ZXINCg0KIyAyKSBBbGwgYXJndW1lbnRzIGFyZSBjb21tb24gYmV0d2VlbiB0aGVzZSB0d28gZnVuY3Rpb25zDQoNCiMgMykgVGhlIG1vc3QgaW1wb3J0YW50IGFyZ3VtZW50IHRvIHJlYWRfZndmKCkgaXMgY29sX3Bvc2l0aW9uDQoNCiMgNCkgDQoNCnJlYWRfY3N2KCJ4LHlcbjEsJ2EsYiciLA0KICAgICAgICAgcXVvdGUgPSAiXCciDQogICAgICAgICApDQoNCnJlYWRfY3N2KCJhLGJcbjEsMiwzXG40LDUsNiIpDQojYSBjb2x1bW4gaXMgbWlzc2luZyBiZWNhdXNlIHRoZSBmaXJzdCB2YWx1ZSBvZiB0aGUgZmlyc3Qgcm93IGlzIG1pc3NpbmcNCg0KcmVhZF9jc3YoImEsYixjXG4xLDJcbjEsMiwzLDQiKQ0KIyBiZWNhdXNlIHRoZXJlIGlzIGEgYWRkaXRpb25hbCB2YWx1ZSBpbiB0aGUgdGhpcmQgY29sdW1uLCBpdCBoYWQgcGFyc2VkIHdpdGggdGhlIGxhc3QgdmFsdWUNCg0KDQpyZWFkX2NzdigiYSxiDQogICAgICAgICAxIikNCiMgdGhlcmUgaXMgYSBiYWNrbGFzaCB3aXRoIGRvdWJsZSBxdW90ZXMgd2hpY2ggbWVzc2VkIHRoZSBlbnRpcmUgY29sdW1uDQoNCg0KcmVhZF9jc3YoImEsYlxuMSwyXG5hLGIiKQ0KIyBNaXhlZCBjb2x1bW4gdGltZXMNCg0KcmVhZF9jc3YoImE7YlxuMTszIikNCiMgSW5jb3JyZWN0IGRlbGltaXRlcg0KDQphbm5veWluZyA8LSB0aWJibGUoDQpgMWAgPSAxOjEwLA0KYDJgID0gYDFgICogMiArIHJub3JtKGxlbmd0aChgMWApKQ0KKQ0KDQpgYGANCg0KDQoNCg==</div>
 
 
 
