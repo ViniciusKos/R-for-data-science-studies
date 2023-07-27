@@ -66,7 +66,6 @@ df
 
 
 
-
 ```{r}
 df |> 
   pivot_longer(
@@ -74,5 +73,102 @@ df |>
     names_to = "measurement",
     values_to = "value"
   )
+```
+
+
+```{r}
+# Many variables in column Names
+who2 |> pivot_longer(
+  cols = !(country:year), # vector of columns that I want to pivot longer
+  names_to = c("diagnosis", "gender", "age"), # name of nem created columns
+  names_sep = "_", # separator,
+  values_to = "count",
+  values_drop_na = TRUE # name of the new count column
+)
+```
+
+```{r}
+household
+```
+
+
+```{r}
+household |> pivot_longer(
+  cols = !family,
+  cols_vary = "fastest",
+  names_to = c(".value", "child"),
+  names_sep = "_",
+  values_drop_na = TRUE
+)
+```
+# 3.0 Widening the data
+
+```{r}
+cms_patient_experience
+```
+
+
+```{r}
+cms_patient_experience |>
+  pivot_wider(
+    names_from = measure_cd,
+    values_from = prf_rate
+  ) |> glimpse()
+```
+
+```{r}
+cms_patient_experience |>
+  pivot_wider(
+    id_cols = starts_with("org"),
+    names_from = measure_cd,
+    values_from = prf_rate
+  )
+```
+
+```{r}
+df <- tribble(
+~id, ~measurement, ~value,
+"A", "bp1", 100,
+"B", "bp1", 140,
+"B", "bp2", 115,
+"A", "bp2", 120,
+"A", "bp3", 105
+)
+df
+```
+
+```{r}
+df |> pivot_wider(
+  id_cols = id,
+  names_from = measurement,
+  values_from = value
+)
+```
+
+```{r}
+df <- tribble(
+~id, ~measurement, ~value,
+"A", "bp1", 100,
+"A", "bp1", 102,
+"A", "bp2", 120,
+"B", "bp1", 140,
+"B", "bp2", 115
+)
+df
+```
+
+
+```{r}
+df |> 
+  pivot_wider(
+    names_from = measurement,
+    values_from = value
+  )
+```
+```{r}
+df |>
+  group_by(id, measurement) |> 
+  summarize(n = n(), .groups = "drop") |> 
+  filter(n > 1)
 ```
 
