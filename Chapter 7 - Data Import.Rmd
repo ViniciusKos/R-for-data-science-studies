@@ -1,0 +1,23 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+```{r}
+renv::restore()
+```
+
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+```{r}
+students <- read_csv("https://pos.it/r4ds-students-csv")
+head(students)
+```
+
