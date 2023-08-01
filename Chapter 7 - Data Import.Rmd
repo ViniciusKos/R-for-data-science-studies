@@ -106,7 +106,44 @@ annoying <- tibble(
 `2` = `1` * 2 + rnorm(length(`1`))
 )
 
+annoying |> ggplot(
+  aes(1, 2)
+  ) +
+  geom_point()
+
+annoying <- annoying |> mutate("3" = 2/1)
+
+annoying |> rename( 
+  "one" = "1"
+, "two" = "2"
+, "three" = "3"
+)
+
+```
+```{r}
+another_csv <- "
+x,y,z
+1,2,3"
+read_csv(
+another_csv,
+col_types = cols(.default = col_character())
+)
+
+read_csv(
+  another_csv,
+  col_types = cols_only( x = col_character())
+)
 ```
 
+```{r}
+sales_files <- c(
+  "https://pos.it/r4ds-01-sales",
+  "https://pos.it/r4ds-02-sales",
+  "https://pos.it/r4ds-03-sales"
+)
+read_csv( sales_files, id = "file")
+
+write.csv()
+```
 
 
