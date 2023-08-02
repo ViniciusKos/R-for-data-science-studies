@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+
+
+```{r}
+renv::restore()
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+mpg
+```
+
+```{r}
+ggplot( mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+
+ggplot( mpg, aes(x = displ, y = hwy, alpha = class)) +
+  geom_point()
+  
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(color = "blue")
+
+```
+
+# 1.0 Exercises
+
+```{r}
+mpg
+```
+
+
+```{r}
+mpg |> ggplot(aes(
+  x = displ,
+  y = hwy
+  )) +
+  geom_point(shape = 24, fill="pink", color="blue", size=3)
+```
+
+```{r}
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy), color="blue")
+
+#Because aes mapping maps the behavior of the charts in variables, color argument inside aes gives for each variable a color, since it is a raw string, ever instance gets the same group called "blue".
+```
+
+
+```{r}
+mpg
+```
+
+
+```{r}
+ggplot(mpg) +
+  geom_point( aes( x=displ, y=hwy, color=cty<18) )
+
+# When I use boolean condition in a color map to an aesthetic, the instances which met the conditions get colored from those which didn't.
+```
+

@@ -141,9 +141,46 @@ sales_files <- c(
   "https://pos.it/r4ds-02-sales",
   "https://pos.it/r4ds-03-sales"
 )
-read_csv( sales_files, id = "file")
+df <- read_csv( sales_files, id = "file")
 
-write.csv()
+write_csv( df, "data/students.csv")
 ```
 
+```{r}
+df <-  df |>  mutate( year = as.factor(year))
+head(df)
+```
+
+```{r}
+write_csv( df, "data/students.csv")
+
+```
+
+```{r}
+test <- read_csv("data/students.csv")
+head(test)
+```
+
+```{r}
+write_rds(df, "students.rds")
+dfrds <- read_rds("students.rds")
+head(dfrds)
+```
+
+```{r}
+tibble(
+  x = c(1, 2, 5),
+  y = c("h", "m", "g"),
+  z = c(0.08, 0.83, 0.60)
+)
+```
+
+```{r}
+tribble(
+  ~x, ~y, ~z,
+  1, "h", 0.08,
+  2, "m", 0.83,
+  5, "g", 0.60
+)
+```
 
