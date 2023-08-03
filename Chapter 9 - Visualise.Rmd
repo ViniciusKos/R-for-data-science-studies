@@ -71,3 +71,79 @@ ggplot(mpg) +
 # When I use boolean condition in a color map to an aesthetic, the instances which met the conditions get colored from those which didn't.
 ```
 
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_smooth()
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_smooth(aes(linetype = drv))
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_smooth(aes(color = drv))
+```
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_smooth()
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_point(
+    data = mpg |> filter(class == "2seater"),
+    color = "red"
+  ) +
+  geom_point(
+    data = mpg |> filter(class == "2seater"),
+    shape= "circle open", size = 3, color = "red")
+```
+
+
+```{r}
+ggplot(mpg, aes(x=hwy)) +
+  geom_histogram(binwidth = 2)
+
+ggplot(mpg, aes(x = hwy)) +
+  geom_density()
+
+ggplot(mpg, aes(x = hwy)) +
+  geom_boxplot()
+```
+
+```{r}
+mpg
+```
+
+
+```{r}
+
+
+p <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(~continent) +
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') +
+  transition_time(year) +
+  ease_aes('linear')
+
+print(p)
+```
+
+
+```{r}
+library(gganimate)
+
+ggplot(mpg, aes(factor(trans), hwy)) +
+  geom_boxplot() +
+  transition_states(
+    model,
+    transition_length = 2,
+    state_length = 1
+  ) +
+  enter_fade() +
+  exit_shrink() +
+  ease_aes("sine-in-out")
+```
+
