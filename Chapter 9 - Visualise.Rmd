@@ -113,37 +113,49 @@ ggplot(mpg, aes(x = hwy)) +
 mpg
 ```
 
+#2.0 Exercises geometric objects
 
 ```{r}
+ggplot(mpg, aes(x=displ, y=hwy)) +
+  geom_line()
+
+ggplot(mpg, aes(x=displ, y=hwy)) +
+  geom_area()
 
 
-p <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
-  geom_point(alpha = 0.7, show.legend = FALSE) +
-  scale_colour_manual(values = country_colors) +
-  scale_size(range = c(2, 12)) +
-  scale_x_log10() +
-  facet_wrap(~continent) +
-  # Here comes the gganimate specific bits
-  labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') +
-  transition_time(year) +
-  ease_aes('linear')
+#2)
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_smooth(aes(color = drv))
 
-print(p)
+#3)
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_smooth(aes(color = drv), se = FALSE)
+
+#4)
+ggplot(mpg, aes( x = displ, y = hwy)) +
+  geom_smooth() +
+  geom_point()
+
+ggplot(mpg, aes( x = displ, y = hwy)) +
+  geom_smooth( aes(group = drv)) +
+  geom_point()
+
+ggplot(mpg, aes( x = displ, y = hwy, color=drv)) +
+  geom_smooth() +
+  geom_point()
+
+ggplot(mpg, aes( x = displ, y = hwy)) +
+  geom_smooth( se = FALSE) +
+  geom_point( aes(color = drv) )
+
+ggplot(mpg, aes( x = displ, y = hwy)) +
+  geom_smooth( aes(linetype = drv), show.legend = FALSE) +
+  geom_point( aes(color = drv) )
+
+ggplot(mpg, aes( x = displ, y = hwy)) +
+  geom_point(colour = "white", size = 4) +
+    geom_point( aes(color = drv), size = 2)
+
 ```
 
-
-```{r}
-library(gganimate)
-
-ggplot(mpg, aes(factor(trans), hwy)) +
-  geom_boxplot() +
-  transition_states(
-    model,
-    transition_length = 2,
-    state_length = 1
-  ) +
-  enter_fade() +
-  exit_shrink() +
-  ease_aes("sine-in-out")
-```
 
