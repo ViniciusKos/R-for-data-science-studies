@@ -158,4 +158,75 @@ ggplot(mpg, aes( x = displ, y = hwy)) +
 
 ```
 
+# 3.0 Facets
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(drv ~ cyl, scales = "free_x")
+```
+
+```{r}
+#2)
+ggplot(mpg) +
+  geom_point(aes(x = drv, y = cyl))
+
+#3)
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+
+#4)
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow = 2)
+
+#5)
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow = 2, shrink = FALSE, strip.position = "top")
+
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(. ~ class)
+#It doesn't have ncol or nrow because this is already pre-defined by cardinality of the mapping variable.
+
+#6) The first one it's much better to make easier to compare engine size across cars, It depends on the axis of the value variable you are comparing, it needs to be in the same axis
+ggplot(mpg, aes(x = displ)) +
+  geom_histogram() +
+  facet_grid(drv ~ .)
+
+ggplot(mpg, aes(x = displ)) +
+  geom_histogram() +
+  facet_grid(. ~ drv)
+
+#7) In facet grid the first argument is row faceting variable, whereas in facet_wrap it its columns's.
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_wrap(drv ~ .)
+
+```
+
+# 4.0 Statistical Transformation
+
+```{r}
+diamonds |> 
+  count(cut) |> 
+  ggplot(aes(x = cut, y = n)) +
+  geom_bar(stat = "identity")
+```
+
+```{r}
+diamonds |> 
+  ggplot(aes(x=cut)) +
+  geom_bar(stat="identity")
+```
 
