@@ -227,6 +227,55 @@ diamonds |>
 ```{r}
 diamonds |> 
   ggplot(aes(x=cut)) +
-  geom_bar(stat="identity")
+  geom_bar()
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = after_stat(prop), group = 1)) +
+  geom_bar()
+```
+
+```{r}
+# Exercises
+#1)
+ggplot(diamonds) +
+  stat_summary(
+    aes(x = cut, y = depth),
+    fun.min = min,
+    fun.max = max,
+    fun = median,
+    geom = "pointrange"
+  )
+
+#2) geom_bar the height is proportional to the number of cases in each group, geom_col the height represent values in data
+
+#3)
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = after_stat(prop), group=1)) +
+geom_bar()
+ggplot(diamonds, aes(x = cut, fill=color, y = after_stat(prop), group=color)) +
+geom_bar()
+```
+
+
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(aes(x = cut, fill = color), position = "fill")
+```
+
+
+# 4.0 Position Adjustments
+
+```{r}
+ggplot(data = diamonds, aes(x = cut, fill = color)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+geom_point(position = "jitter")
 ```
 
