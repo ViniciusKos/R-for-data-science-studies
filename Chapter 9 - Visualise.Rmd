@@ -279,3 +279,33 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 geom_point(position = "jitter")
 ```
 
+```{r}
+#Exercises
+
+#1)
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point(position = "jitter")
+
+#2)
+ggplot(mpg, aes(x = displ, y = hwy)) +
+geom_point()
+ggplot(mpg, aes(x = displ, y = hwy)) +
+geom_point(position = "identity")
+
+#3)
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_jitter( width=1, height=3 )
+
+#4)
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_jitter()
+
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_count()
+
+
+#5)
+ggplot(mpg, aes(x = class, y = hwy)) +
+  geom_boxplot( position = "jitter")
+```
+
