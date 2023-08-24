@@ -18,294 +18,66 @@ library(tidyverse)
 ```
 
 ```{r}
-mpg
-```
-
-```{r}
-ggplot( mpg, aes(x = displ, y = hwy, color = class)) + 
-  geom_point()
-
-ggplot( mpg, aes(x = displ, y = hwy, alpha = class)) +
-  geom_point()
-  
-```
-
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_point(color = "blue")
-
-```
-
-# 1.0 Exercises
-
-```{r}
-mpg
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.5)
 ```
 
 
 ```{r}
-mpg |> ggplot(aes(
-  x = displ,
-  y = hwy
-  )) +
-  geom_point(shape = 24, fill="pink", color="blue", size=3)
+smaller <- diamonds |> filter(carat <3)
+ggplot(smaller, aes(x = carat)) +
+  geom_histogram( binwidth = 0.01)
 ```
 
 ```{r}
-ggplot(mpg) +
-  geom_point(aes(x = displ, y = hwy), color="blue")
-
-#Because aes mapping maps the behavior of the charts in variables, color argument inside aes gives for each variable a color, since it is a raw string, ever instance gets the same group called "blue".
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram(binwidth = 0.5)
 ```
 
 
 ```{r}
-mpg
-```
-
-
-```{r}
-ggplot(mpg) +
-  geom_point( aes( x=displ, y=hwy, color=cty<18) )
-
-# When I use boolean condition in a color map to an aesthetic, the instances which met the conditions get colored from those which didn't.
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram(binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
 ```
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_smooth()
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_smooth(aes(linetype = drv))
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_smooth(aes(color = drv))
-```
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) + 
-  geom_point(aes(color = class)) +
-  geom_smooth()
+unusual <- diamonds |> 
+  filter(y < 3 | y > 20) |> 
+  select(price, x, y, z) |> 
+  arrange(y)
+unusual
 ```
 
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_point() +
-  geom_point(
-    data = mpg |> filter(class == "2seater"),
-    color = "red"
-  ) +
-  geom_point(
-    data = mpg |> filter(class == "2seater"),
-    shape= "circle open", size = 3, color = "red")
-```
+
+
+# 1.0 Variation:
 
 
 ```{r}
-ggplot(mpg, aes(x=hwy)) +
-  geom_histogram(binwidth = 2)
+#1.0
+ggplot(diamonds, aes(x = x)) +
+  geom_histogram()
 
-ggplot(mpg, aes(x = hwy)) +
-  geom_density()
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram()
 
-ggplot(mpg, aes(x = hwy)) +
-  geom_boxplot()
-```
-
-```{r}
-mpg
-```
-
-#2.0 Exercises geometric objects
-
-```{r}
-ggplot(mpg, aes(x=displ, y=hwy)) +
-  geom_line()
-
-ggplot(mpg, aes(x=displ, y=hwy)) +
-  geom_area()
+ggplot(diamonds, aes(x = z)) +
+  geom_histogram()
 
 
-#2)
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_smooth(aes(color = drv))
+#2.0
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 15)
 
-#3)
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_smooth(aes(color = drv), se = FALSE)
+#3.0
+diamonds |> count(carat)
 
-#4)
-ggplot(mpg, aes( x = displ, y = hwy)) +
-  geom_smooth() +
-  geom_point()
+#0.99 carat 23
+#1 carat 1558
+#maybe was a problem in data collection
 
-ggplot(mpg, aes( x = displ, y = hwy)) +
-  geom_smooth( aes(group = drv)) +
-  geom_point()
-
-ggplot(mpg, aes( x = displ, y = hwy, color=drv)) +
-  geom_smooth() +
-  geom_point()
-
-ggplot(mpg, aes( x = displ, y = hwy)) +
-  geom_smooth( se = FALSE) +
-  geom_point( aes(color = drv) )
-
-ggplot(mpg, aes( x = displ, y = hwy)) +
-  geom_smooth( aes(linetype = drv), show.legend = FALSE) +
-  geom_point( aes(color = drv) )
-
-ggplot(mpg, aes( x = displ, y = hwy)) +
-  geom_point(colour = "white", size = 4) +
-    geom_point( aes(color = drv), size = 2)
 
 ```
 
-# 3.0 Facets
-
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) +
-  geom_point() +
-  facet_grid(drv ~ cyl, scales = "free_x")
-```
-
-```{r}
-#2)
-ggplot(mpg) +
-  geom_point(aes(x = drv, y = cyl))
-
-#3)
-ggplot(mpg) +
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(drv ~ .)
-
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(. ~ cyl)
-
-#4)
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_wrap(~ class, nrow = 2)
-
-#5)
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_wrap(~ class, nrow = 2, shrink = FALSE, strip.position = "top")
-
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(. ~ class)
-#It doesn't have ncol or nrow because this is already pre-defined by cardinality of the mapping variable.
-
-#6) The first one it's much better to make easier to compare engine size across cars, It depends on the axis of the value variable you are comparing, it needs to be in the same axis
-ggplot(mpg, aes(x = displ)) +
-  geom_histogram() +
-  facet_grid(drv ~ .)
-
-ggplot(mpg, aes(x = displ)) +
-  geom_histogram() +
-  facet_grid(. ~ drv)
-
-#7) In facet grid the first argument is row faceting variable, whereas in facet_wrap it its columns's.
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(drv ~ .)
-
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_wrap(drv ~ .)
-
-```
-
-# 4.0 Statistical Transformation
-
-```{r}
-diamonds |> 
-  count(cut) |> 
-  ggplot(aes(x = cut, y = n)) +
-  geom_bar(stat = "identity")
-```
-
-```{r}
-diamonds |> 
-  ggplot(aes(x=cut)) +
-  geom_bar()
-```
-
-```{r}
-ggplot(diamonds, aes(x = cut, y = after_stat(prop), group = 1)) +
-  geom_bar()
-```
-
-```{r}
-# Exercises
-#1)
-ggplot(diamonds) +
-  stat_summary(
-    aes(x = cut, y = depth),
-    fun.min = min,
-    fun.max = max,
-    fun = median,
-    geom = "pointrange"
-  )
-
-#2) geom_bar the height is proportional to the number of cases in each group, geom_col the height represent values in data
-
-#3)
-```
-
-```{r}
-ggplot(diamonds, aes(x = cut, y = after_stat(prop), group=1)) +
-geom_bar()
-ggplot(diamonds, aes(x = cut, fill=color, y = after_stat(prop), group=color)) +
-geom_bar()
-```
-
-
-
-```{r}
-ggplot(data = diamonds) + 
-  geom_bar(aes(x = cut, fill = color), position = "fill")
-```
-
-
-# 4.0 Position Adjustments
-
-```{r}
-ggplot(data = diamonds, aes(x = cut, fill = color)) +
-  geom_bar(position = "fill")
-```
-
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) +
-geom_point(position = "jitter")
-```
-
-```{r}
-#Exercises
-
-#1)
-ggplot(mpg, aes(x = cty, y = hwy)) +
-  geom_point(position = "jitter")
-
-#2)
-ggplot(mpg, aes(x = displ, y = hwy)) +
-geom_point()
-ggplot(mpg, aes(x = displ, y = hwy)) +
-geom_point(position = "identity")
-
-#3)
-ggplot(mpg, aes(x = cty, y = hwy)) +
-  geom_jitter( width=1, height=3 )
-
-#4)
-ggplot(mpg, aes(x = cty, y = hwy)) +
-  geom_jitter()
-
-ggplot(mpg, aes(x = cty, y = hwy)) +
-  geom_count()
-
-
-#5)
-ggplot(mpg, aes(x = class, y = hwy)) +
-  geom_boxplot( position = "jitter")
-```
 
