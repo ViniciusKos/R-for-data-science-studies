@@ -75,9 +75,78 @@ diamonds |> count(carat)
 
 #0.99 carat 23
 #1 carat 1558
-#maybe was a problem in data collection
+#maybe was a problem in data collectiony
 
+#4.0
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 100) +
+  coord_cartesian(xlim = c(0,2000))
+
+#The binwidth gets very big when you zoom and in and don't set its value.
+```
+
+# 2.0 Unusual Values
+
+
+```{r}
+#Replace null values with NA
+
+diamonds2 <- diamonds |> 
+  mutate(y = if_else(y < 3 | y > 20, NA, y))
+
+ggplot(diamonds2, aes(x = x, y = y)) +
+  geom_point()
 
 ```
 
+```{r}
+nycflights13::flights |> 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + (sched_min/60),
+  ) |> 
+  ggplot(aes(x = sched_dep_time)) +
+  geom_freqpoly(aes(color = cancelled), binwidth = 1/4)
+```
+
+```{r}
+#1)
+ggplot(diamonds2, aes(x = x, y = y)) +
+  geom_point()
+ggplot(diamonds2, aes(x = y)) +
+  geom_bar()
+#both histogram and barchart omits missing values
+
+#2)
+mean(diamonds$y)
+
+mean(diamonds$y, na.rm = TRUE)
+#na.rm remove the NAs before the computation
+
+#3)
+nycflights13::flights |> 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + (sched_min/60),
+  ) |> 
+  ggplot(aes(x = sched_dep_time)) +
+  geom_freqpoly(aes(color = cancelled)
+                , binwidth = 1/4
+                ) +
+  facet_grid(rows = vars(cancelled)
+             ,scales = "free_y"
+             ,shrink = TRUE
+             )
+```
+
+# 3.0 Covariation
+
+
+```{r}
+head(nycflights13::flights)
+```
 
