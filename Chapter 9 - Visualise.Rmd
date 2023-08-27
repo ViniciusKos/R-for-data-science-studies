@@ -100,6 +100,10 @@ ggplot(diamonds2, aes(x = x, y = y)) +
 ```
 
 ```{r}
+```
+
+
+```{r}
 nycflights13::flights |> 
   mutate(
     cancelled = is.na(dep_time),
@@ -147,6 +151,84 @@ nycflights13::flights |>
 
 
 ```{r}
-head(nycflights13::flights)
+ggplot(diamonds, aes(x = price)) +
+  geom_freqpoly(aes(color = cut), binwidth = 500, linewidth = 0.75)
 ```
+
+```{r}
+ggplot(diamonds, aes(x = price, y = after_stat(density))) +
+  geom_freqpoly(aes(color = cut), binwidth = 500, linewidth = 0.75)
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = price)) + geom_boxplot()
+```
+
+```{r}
+ggplot(mpg, aes(x = class, y = hwy)) + geom_boxplot()
+```
+
+```{r}
+ggplot(mpg, aes(x = fct_reorder(class, hwy, median) , y = hwy)) + geom_boxplot()
+```
+```{r}
+ggplot(mpg, aes(x = hwy, y = fct_reorder(class, hwy, median))) + geom_boxplot()
+```
+
+```{r}
+flight <- as_tibble(nycflights13::flights) |>
+  mutate( cancelled = is.na(dep_time) )
+head(flight)
+```
+
+## 3.1 Exercises
+
+```{r}
+ggplot(flight, aes(x = cancelled, y = dep_time)) +
+  geom_boxplot()
+```
+
+```{r}
+
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  print(i)
+}
+```
+
+
+
+```{r}
+
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  p <- ggplot(diamonds, aes(x = fct_reorder(diamonds[[i]], y, median), y = price)) +
+    geom_boxplot() +
+    #labs(x = i, y = "price",
+    #     title = glue::glue("Preço vs {i}"),
+    #     subtitle = "taptap") +
+    ggeasy::easy_center_title()
+  print(p)
+}
+```
+
+```{r}
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  p <- ggplot(diamonds, aes(x = diamonds[[i]], y=price)) +
+    lvplot::geom_lv() + 
+    labs(x = i)
+  print(p)
+}
+```
+
+```{r}
+ggplot(diamonds, aes( x=cut, y=price )) +
+  geom_violin()
+ggplot(diamonds, aes( x=price )) +
+  geom_histogram() +
+  facet_grid( rows=cut )
+ggplot(diamonds, aes( x=cut, y=price )) +
+  geom_freqpoly()
+ggplot(diamonds, aes( x=cut, y=price )) +
+  geom_density()
+```
+
 
