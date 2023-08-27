@@ -220,15 +220,22 @@ for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
 ```
 
 ```{r}
-ggplot(diamonds, aes( x=cut, y=price )) +
+ggplot(diamonds, aes( x = cut, y = price )) +
   geom_violin()
-ggplot(diamonds, aes( x=price )) +
-  geom_histogram() +
-  facet_grid( rows=cut )
-ggplot(diamonds, aes( x=cut, y=price )) +
-  geom_freqpoly()
-ggplot(diamonds, aes( x=cut, y=price )) +
-  geom_density()
+ggplot(diamonds, aes( x = price )) +
+  geom_histogram( binwidth = 1000) +
+  facet_grid( rows = vars(cut) )
+ggplot(diamonds, aes( x = price)) +
+  geom_freqpoly(aes(color=cut), linewidth=0.75)
+ggplot(diamonds, aes( x = price, fill=cut, colour=cut )) +
+  geom_density(alpha = 0.1)
 ```
+
+
+```{r}
+ggplot(diamonds, aes( x = cut, y=price)) +
+  geom_jitter()
+```
+
 
 
