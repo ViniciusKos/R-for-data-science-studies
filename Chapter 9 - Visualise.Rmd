@@ -15,6 +15,8 @@ renv::restore()
 
 ```{r}
 library(tidyverse)
+library(tidymodels)
+
 ```
 
 ```{r}
@@ -310,8 +312,54 @@ ggplot(smaller, aes(x = carat, y = price)) +
 
 ggplot(smaller, aes(x = carat, y = price)) +
   geom_boxplot(aes(group = cut_number(carat, 4)))
+
+ggplot(smaller, aes(x = carat)) +
+  geom_freqpoly(aes(group = cut_number(carat, 4)))
+```
+
+```{r}
+ggplot(smaller, aes(x=cut_number(carat, 4), y=price)) + 
+  geom_boxplot() +
+  facet_grid(cols=vars(cut))
 ```
 
 
+```{r}
+diamonds |> 
+  filter(x >= 4) |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  coord_cartesian(xlim = c(4, 11), ylim = c(4, 11))
 
+diamonds |> 
+  filter(x >= 4) |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_bin2d() +
+  coord_cartesian(xlim = c(4, 11), ylim = c(4, 11))
+```
+
+## 3.3 Patterns and Models
+
+```{r}
+
+diamonds <- diamonds |> 
+  mutate(
+    log_price = log(price),
+    log_carat = log(carat)
+  )
+diamonds_fit <- linear_reg() |> 
+  fit(log_price ~ log_carat, data = diamonds)
+
+diamonds_aug <- augment(diamonds_fit, new_data = diamonds) |> 
+  mutate(.resid = exp(.resid))
+
+ggplot(diamonds_aug, aes(x = carat, y = .resid)) +
+geom_point()
+```
+
+
+```{r}
+ggplot(diamonds_aug, aes(x = cut, y = .resid)) +
+geom_boxplot()
+```
 
