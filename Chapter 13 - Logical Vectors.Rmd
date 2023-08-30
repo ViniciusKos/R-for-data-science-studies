@@ -1,0 +1,111 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+```{r}
+renv::snapshot()
+```
+
+
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(tibble)
+```
+
+#1.0 Comparison
+
+```{r}
+x <- c(1, 2, 5, 7, 11, 13)
+x*2
+```
+```{r}
+df <- tibble(x)
+df |> 
+  mutate(y = x * 2)
+
+flights |> 
+  filter(dep_time >600 & dep_time < 2000 & abs(arr_delay) < 20)
+
+
+#create conditional columns with mutate
+flights |> 
+  mutate(
+    daytime = dep_time > 600 & dep_time < 2000,
+    approx_ontime = abs(arr_delay) < 20,
+    .keep = "used"
+  )
+
+
+#to filter and boolean column the TRUE already filter itsel
+flights |> 
+  mutate(
+    daytime = dep_time > 600 & dep_time < 2000,
+    approx_ontime = abs(arr_delay) < 20,
+  ) |> 
+  filter(daytime & approx_ontime)
+
+```
+
+```{r}
+x <- c(1 / 49 * 49, sqrt(2)^2)
+x
+
+x == c(1,2)
+```
+
+```{r}
+print(x[1], digits = 16)
+```
+
+
+```{r}
+near(x, c(1, 2))
+```
+
+```{r}
+flights |> 
+  filter(dep_time == NA)
+```
+
+```{r}
+flights |> 
+  filter(is.na(dep_time)) |> 
+  arrange(dep_time)
+
+flights |> 
+  filter(month == 1, day == 1) |> 
+  arrange(desc(is.na(dep_time)), dep_time)
+```
+## 1.1 Exercises
+
+```{r}
+
+##to inhect function argument in data masked context, just embrance it with {{}}
+#my_mean <- function(data, var1, var2) {
+#  dplyr::summarise(data, mean({{ var1 }} + {{ var2 }}))
+#}
+
+
+#1) near
+near(sqrt(2)^2,2)
+
+#2) Não consegui
+flights |> 
+  mutate(nulo_dep_time = is.na(dep_time)
+         ,nulo_sched_dep_time = is.na(sched_dep_time)
+         ,nulo_dep_delay = is.na(dep_delay)) |> 
+  count(c(nulo_dep_time))
+
+```
+# 2.0 Boolean Algebra
+
+```{r}
+
+```
+
