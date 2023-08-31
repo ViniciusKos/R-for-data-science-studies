@@ -10,6 +10,9 @@ output: html_notebook
 renv::snapshot()
 ```
 
+```{r}
+options(scipen=999)
+```
 
 
 ```{r}
@@ -105,6 +108,89 @@ flights |>
 ```
 # 2.0 Boolean Algebra
 
+```{r}
+df <- tibble(x = c(TRUE, FALSE, NA))
+df |> 
+  mutate(
+    and = x & NA,
+    or = x | NA
+  )
+```
+
+```{r}
+flights |> 
+  filter(month == 11 | month == 12)
+```
+
+```{r}
+flights |> 
+  filter(month == 11 | 12)
+```
+```{r}
+flights |> 
+  filter(arr_delay > 0) |> 
+  summarize(
+    behind = mean(arr_delay),
+    n = n(),
+    .by = c(year, month, day)
+  )
+```
+```{r}
+flights |> 
+  summarize(
+    behind = mean(arr_delay[arr_delay > 0], na.rm=TRUE),
+    ahead = mean(arr_delay[arr_delay < 0], na.rm=TRUE),
+    .by = c(year, month, day)
+  )
+```
+
+```{r}
+x <- c(-3:3, NA)
+x
+if_else(x > 0, "+ve", "-ve")
+if_else(x > 0, "+ve", "-ve","esse cara é NA")
+```
+
+```{r}
+if_else(x > 0, -x, -x)
+```
+
+```{r}
+x <- c(-3:3, NA, "qiemm", "hulk")
+case_when(
+  x == 0 ~ "0",
+  x < 0 ~ "-ve",
+  x > 0 ~ "+ve",
+  TRUE ~ "fufu"
+)
+
+
+
+```
+
+```{r}
+#ONLY THE FIRST CONDITION WILL BE MATCHED
+
+case_when(
+  x > 0 ~ "+ve",
+  x > 2 ~ "big"
+)
+```
+
+```{r}
+flights |> 
+  mutate(
+    status = case_when(
+      is.na(arr_delay) ~ "cancelled",
+      arr_delay < -30 ~ "very early",
+      arr_delay < -15 ~ "early",
+      abs(arr_delay) <= 15 ~"on time",
+      arr_delay < 60 ~ "late",
+      arr_delay < Inf ~ "very late",
+    ),
+    .keep = "used"
+  ) |> count(status)
+```
 ```{r}
 
 ```
