@@ -191,7 +191,45 @@ flights |>
     .keep = "used"
   ) |> count(status)
 ```
+
+## 2.1 Exercises
+
 ```{r}
+head(flights)
+```
+
+
+```{r}
+#1)
+fli <- flights |> 
+  mutate(miss = (arr_delay %in% c(NA)) & !(dep_delay %in% NA))
+
+fli |> filter(miss)
+
+
+#2)
+sum(is.na(flights$dep_time))
+
+colSums(is.na(flights |> filter(is.na(dep_time))))
+```
+
+```{r}
+library(lubridate)
+head(flights)
+```
+
+
+```{r}
+flights |> 
+  mutate(datinha = as.Date(time_hour)) |> 
+  summarize(
+  voos_can = sum(is.na(dep_time)),
+  voos_n_can = sum(!is.na(dep_time)),
+  tot = n(),
+  prop_cancelado = voos_can/voos_n_can,
+  .by = c(datinha)
+  )
+
 
 ```
 
