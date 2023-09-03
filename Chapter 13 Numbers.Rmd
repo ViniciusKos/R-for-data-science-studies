@@ -12,7 +12,7 @@ renv::snapshot()
 
 ```{r}
 options(scipen = 999)
-options(digits = 3)
+options(digits = 6)
 ```
 
 
@@ -126,6 +126,55 @@ flights |>
 ```
 
 ```{r}
+x <- 123.4568
 
+round(x, 3)
+
+round(x, 1)
+
+round(x, -1)
+
+round(x, -2)
+
+floor(x)
+
+ceiling(x/0.01) * 0.01
+
+
+```
+
+
+```{r}
+x <- c(1, 2, 5, 10, 15, 20)
+cut(x , breaks = c(0, 5, 10, 15, 20))
+
+```
+
+```{r}
+x <- c(1, 2, 5, 10, 15, 20)
+cut(x, breaks = c(0, 5, 10, 15, 20),
+    labels = c("sm", "md", "lg0", "x1"))
+```
+
+```{r}
+y <- c(NA, -10, 5, 10, 30)
+cut(y, breaks = c(0, 5, 10, 15))
+
+
+```
+
+```{r}
+#3)
+flights |> 
+  filter(month == 1, day == 1) |> 
+  ggplot(aes(x = sched_dep_time, y = dep_delay)) +
+  geom_point()
+
+flights |> 
+  mutate(frac_hours_sched = sched_dep_time %/% 100 + sched_dep_time %% 60,
+         frac_hours_dep = dep_delay %/% 100 + dep_delay %% 60) |> 
+  filter(month == 1, day == 1) |> 
+    ggplot(aes( x = frac_hours_sched, y = frac_hours_dep)) +
+    geom_point()
 ```
 
