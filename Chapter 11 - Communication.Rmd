@@ -306,7 +306,29 @@ presidential |>
   scale_x_date(
     name = "procecure",
     breaks = presidential$start,
-    date_labels = "'%y"
+    date_labels = "'%y",
+    date_breaks = "5 years"
     )
+```
+
+```{r}
+base <- ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = class))
+  base + theme(legend.position = "right")
+  base + theme(legend.position = "left")
+  base + theme(legend.position = "top") +
+    guides(col = guide_legend(nrow = 3))
+  base + theme(legend.position = "bottom")
+
+
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 2, override.aes = list(size = 4)))
+  
 ```
 
