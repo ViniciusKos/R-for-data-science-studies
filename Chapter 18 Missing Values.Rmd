@@ -18,305 +18,166 @@ options(digits = 6)
 
 ```{r}
 library(tidyverse)
-head(gss_cat)
 ```
 
-# 1.0 Factor Basics
+# 1.0 Explicit Missing Values
 
 ```{r}
-x1 <- c("Dec", "Apr", "Jan", "Mar")
+treatment <- tribble(
+~person, ~treatment, ~response,
+"Derrick Whitmore", 1, 7,
+NA, 2, 10,
+NA, 3, NA,
+"Katherine Burke", 1, 4
+)
+head(treatment)
+```
 
-month_levels <- c(
-"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+```{r}
+treatment |> 
+  fill(everything())
+```
+
+```{r}
+x <- c(1, 4, 5, 7, NA)
+coalesce(x, 0)
+```
+
+```{r}
+x <- c(1, 4, 5, 7, -99)
+na_if(x, -99)
+```
+
+```{r}
+0*Inf
+```
+
+
+# 2.0 Implicit Missing Values
+
+
+```{r}
+stocks <- tibble(
+year = c(2020, 2020, 2020, 2020, 2021, 2021, 2021),
+qtr = c( 1, 2, 3, 4, 2, 3, 4),
+price = c(1.88, 0.59, 0.35, NA, 0.92, 0.17, 2.66)
 )
 ```
 
 
-
 ```{r}
-y1 <-  factor(x1, levels = month_levels)
-y1
-
-sort(y1)
-```
-
-```{r}
-x2 <- c("Dec", "Apr", "Jam", "Mar")
-y2 <-  fct(x2, levels = month_levels)
-y
-
-
-#It is safer to use fct instead of factor
-
-```
-
-```{r}
-levels(y2)
-```
-
-```{r}
-csv <- "
-month,value
-Jan,12
-Feb,56
-Mar,12"
-
-df <- read_csv(
-  csv,
-  col_types = cols(
-    month = col_factor(month_levels)
-    )
-  )
-df$month
-
-```
-
-# 2.0 General Social Survey
-
-
-```{r}
-head(gss_cat)
-```
-
-```{r}
-gss_cat |> 
-  count(race)
-```
-
-
-## 2.1 Exercises
-
-
-```{r}
-#1)
-gss_cat |> 
-  ggplot(aes(y = rincome)) +
-  geom_bar()
-```
-
-```{r}
-#2)
-gss_cat |> count(
-  relig, 
-  sort = TRUE
-  )
-
-gss_cat |> count(
-  partyid, 
-  sort = TRUE
+stocks |> 
+  pivot_wider(
+    names_from = qtr,
+    values_from = price
   )
 ```
 
 ```{r}
-#3)
-gss_cat |> 
+stocks
+```
+
+
+```{r}
+stocks |> 
+  complete(year, qtr)
+```
+
+```{r}
+stocks |>
+  complete(year = 2019:2021, qtr)
+```
+
+```{r}
+library(nycflights13)
+
+
+
+flights |> 
+  distinct(faa = dest) |> 
+  anti_join(airports)
+
+
+flights |>
+  distinct(tailnum) |> 
+  anti_join(planes)
+```
+
+```{r}
+flights
+```
+
+# 3.0 Factors and Empty Groups
+
+```{r}
+health <- tibble(
+name = c("Ikaia", "Oletta", "Leriah", "Dashay", "Tresaun"),
+smoker = factor(c("no", "no", "no", "no", "no"), levels =
+c("yes", "no")),
+age = c(34, 88, 75, 47, 56),
+)
+
+health |> 
+  count(smoker)
+```
+
+```{r}
+health |> 
+  count(smoker, .drop = FALSE)
+```
+
+```{r}
+ggplot(health, aes(x = smoker)) +
+  geom_bar() +
+  scale_x_discrete()
+
+ggplot(health, aes(x = smoker)) +
+  geom_bar() +
+  scale_x_discrete( drop = FALSE)
+```
+
+```{r}
+health |> 
+  group_by(smoker) |> 
   summarize(
-    .by = c(denom, relig),
-    n = n()
-    ) |> 
-  arrange(denom)
-```
-
-# 3.0 Modifying Factor Order
-
-```{r}
-relig_summary <- gss_cat |>
-group_by(relig) |>
-summarize(
-tvhours = mean(tvhours, na.rm = TRUE),
-n = n()
-)
-
-ggplot(relig_summary, aes(x = tvhours, y = relig)) +
-geom_point()
-```
-
-
-```{r}
-ggplot(relig_summary, aes(x = tvhours, y = fct_reorder(relig, tvhours, .fun = median))) +
-  geom_point()
-```
-
-```{r}
-relig_summary |> 
-  mutate(
-    relig = fct_reorder(relig, tvhours)
+    n = n(),
+    mean_age = mean(age),
+    min_age = min(age),
+    max_age = max(age),
+    sd_age = sd(age)
   ) |> 
-  ggplot(aes(x = tvhours, y = relig)) +
-  geom_point()
+  complete(smoker) |> 
+  fill(everything(), .direction = "up")
 ```
 
 ```{r}
-rincome_summary <- gss_cat |> 
-  summarize(.by = rincome,
-            age = mean(age, na.rm = TRUE)
-  )
-rincome_summary |> 
-  ggplot(aes(x = age, y = fct_reorder(rincome, age))) +
-  geom_point()
-```
-
-```{r}
-rincome_summary <- gss_cat |> 
-  summarize(.by = rincome,
-            age = mean(age, na.rm = TRUE)
-  )
-rincome_summary |> 
-  ggplot(aes(x = age, y = fct_relevel(rincome, "Not applicable"))) +
-  geom_point()
-```
-
-```{r}
-by_age <- gss_cat |>
-filter(!is.na(age)) |>
-count(age, marital) |>
-group_by(age) |>
-mutate(
-prop = n / sum(n)
-)
-
-ggplot(by_age, aes(x = age, y = prop, color = marital)) +
-geom_line(linewidth = 1) +
-scale_color_brewer(palette = "Set1")
-
-```
-
-
-```{r}
-ggplot(by_age, aes(x = age, y = prop, color = fct_reorder2(marital, prop, age))) +
-  geom_line(linewidth = 1) +
-  scale_color_brewer(palette = "Set1")
-```
-
-
-```{r}
-gss_cat |>
-mutate(marital = marital) |>
-ggplot(aes(x = marital)) +
-geom_bar()
-```
-
-```{r}
-gss_cat |> 
-  mutate(marital = marital |> fct_infreq() |> fct_rev()) |> 
-  ggplot(aes(x = marital)) +
-  geom_bar()
-```
-
-```{r}
-## 3.1 Exercises
-
-#2
-gss_cat |> str()
-
-fct_relevel(gss_cat$rincome, "Not applicable") |> levels()
-
-
-gss_cat$rincome |> levels()
-
-gss_cat$rincome |> levels() |> fct_infreq()
-```
-
-
-
-# 4.0 Modifying Factor Levels
-
-```{r}
-gss_cat |> 
-  count(partyid)
-```
-
-
-```{r}
-gss_cat |> 
-  mutate(
-    partyid = fct_recode(partyid,
-"Republican, strong" = "Strong republican",
-"Republican, weak" = "Not str republican",
-"Independent, near rep" = "Ind,near rep",
-"Independent, near dem" = "Ind,near dem",
-"Democrat, weak" = "Not str democrat",
-"Democrat, strong" = "Strong democrat"
-                         )
-  ) |> count(partyid)
-
-```
-
-
-```{r}
-gss_cat |>
-mutate(
-partyid = fct_collapse(partyid,
-"other" = c("No answer", "Don't know", "Other party"),
-"rep" = c("Strong republican", "Not str republican"),
-"ind" = c("Ind,near rep", "Independent", "Ind,near dem"),
-"dem" = c("Not str democrat", "Strong democrat")
-)
-) |>
-count(partyid)
-```
-
-
-```{r}
-gss_cat |> 
-  mutate(relig = fct_lump_prop(relig, 0.1)) |> 
-  count(relig, sort = TRUE)
-
-```
-
-## 4.1 Exercises
-
-```{r}
-#1)
-
-
-head(gss_cat)
-
-
-gss_cat |> 
-  mutate(partyid_recoded = case_when(
-    str_detect(tolower(partyid), pattern = "rep") ~ "Republicanos",
-    str_detect(tolower(partyid), pattern = "dem") ~ "Democratas",
-      str_detect(tolower(partyid), pattern = "ind") ~ "Indepentes",
-    .default = "quen"
-  )
-  ) |> 
+health |> 
+  group_by(smoker) |> 
   summarize(
-    .by = c(year, partyid_recoded),
-    n = n()
+    n = n(),
+    mean_age = mean(age),
+    min_age = min(age),
+    max_age = max(age),
+    sd_age = sd(age)
   ) |> 
-  ggplot(aes(x = year, y = n, color = fct_reorder2(partyid_recoded, year, n))) +
-  geom_line()
-
-```
-
-```{r}
-#2) 
-
-head(gss_cat)
-gss_cat |> 
-  mutate(
-    rincome_collapsed = fct_lump_prop(rincome, .05 )) |> 
-  count(rincome_collapsed)
-```
-
-```{r}
-#3)
-gss_cat2 <- gss_cat |>
-  mutate(relig = fct_lump_n(relig, n = 10))
-
-```
-
-
-
-
-```{r}
-gss_cat$relig |> levels()
+  complete(smoker) |> 
+  replace(is.na(.), 0)
 ```
 
 
 ```{r}
-gss_cat2$relig |> levels()
+df <- tibble(
+  group = c(1:2, 1, 2),
+  item_id = c(1:2, 2, 3),
+  item_name = c("a", "a", "b", "b"),
+  value1 = c(1, NA, 3, 4),
+  value2 = 4:7
+)
+df
+
+# Combinations --------------------------------------------------------------
+# Generate all possible combinations of `group`, `item_id`, and `item_name`
+# (whether or not they appear in the data)
+df |> complete(group)
 ```
 
