@@ -482,7 +482,9 @@ ggplot(presidential |>
 ```
 
 ```{r}
-head(presidential)
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = cut), alpha = 5/20) +
+  guides(color = guide_legend(override.aes = list(size = 6)))
 ```
 
 
