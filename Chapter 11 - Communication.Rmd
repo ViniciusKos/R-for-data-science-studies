@@ -487,4 +487,14 @@ ggplot(diamonds, aes(x = carat, y = price)) +
   guides(color = guide_legend(override.aes = list(size = 6)))
 ```
 
+#5.0 Themes
+
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_classicgh()
+```
+
 
