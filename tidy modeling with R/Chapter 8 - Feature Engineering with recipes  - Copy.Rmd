@@ -1,0 +1,197 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(nycflights13)
+tidymodels_prefer()
+```
+
+# 1.0 Asimple recipe hor Ames Housing Data
+
+```{r}
+set.seed(502)
+ames_split <- initial_split(ames, prop = 0.80, strata =
+Sale_Price)
+ames_train <- training(ames_split)
+ames_test <- testing(ames_split)
+```
+
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ 
+           Neighborhood +
+           Gr_Liv_Area + 
+           Year_Built +
+           Bldg_Type,
+         data = ames_train) |> 
+  step_log(Gr_Liv_Area, base = 10) |> 
+  step_dummy(all_nominal_predictors())
+```
+
+#2.0 Using Recipes
+
+
+```{r}
+
+ames <- mutate(ames, Sale_Price = log10(Sale_Price))
+set.seed(502)
+ames_split <- initial_split(ames, prop = 0.80, strata =
+Sale_Price)
+ames_train <- training(ames_split)
+ames_test <- testing(ames_split)
+lm_model <- linear_reg() %>% set_engine("lm")
+
+lm_wflow <-
+  workflow() %>%
+  add_model(lm_model) %>%
+  add_variables(outcome = Sale_Price, predictors = c(Longitude,
+  Latitude))
+lm_fit <- fit(lm_wflow, ames_train)
+
+```
+
+
+```{r}
+lm_wflow |> 
+  add_recipe(simple_ames)
+```
+
+
+```{r}
+lm_wflow <- lm_wflow |> 
+  remove_variables() |> 
+  add_recipe(simple_ames)
+lm_wflow
+```
+
+
+```{r}
+lm_fit <- fit(lm_wflow, ames_train)
+predict(lm_fit, ames_test |> slice(1:3))
+```
+
+
+```{r}
+lm_fit |> 
+  extract_recipe(estimated = TRUE)
+
+lm_fit |> 
+  extract_fit_parsnip() |> 
+  tidy() |> 
+  slice(1:5)
+```
+
+# 3.0 Example of Steps
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ Gr_Liv_Area + Year_Built +
+Bldg_Type,
+data = ames_train) |> 
+  step_log(Gr_Liv_Area, base = 10) |> 
+ # step_other(Neighborhood, threshold = 0.01) |> 
+  step_dummy(all_nominal_predictors()) |> 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_"))
+```
+
+```{r}
+aux0 = simple_ames |> prep() |> bake(new_data = NULL,
+                                     composition = "tibble")
+head(aux0)
+```
+
+```{r}
+head(ames)
+```
+
+```{r}
+library(patchwork)
+library(splines)
+plot_smoother <- function(deg_free) {
+ggplot(ames_train, aes(x = Latitude, y = 10^Sale_Price)) +
+geom_point(alpha = .2) +
+scale_y_log10() +
+geom_smooth(
+method = lm,
+formula = y ~ ns(x, df = deg_free),
+color = "lightblue",
+se = FALSE
+) +
+labs(title = paste(deg_free, "Spline Terms"),
+y = "Sale Price (USD)")
+}
+( plot_smoother(2) + plot_smoother(5) ) / ( plot_smoother(20) +
+plot_smoother(100) )
+```
+
+## 3.1 Feature Extraction PCA
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ .,
+data = ames_train) |> 
+  step_log(Gr_Liv_Area, base = 10) |> 
+ # step_other(Neighborhood, threshold = 0.01) |> 
+  step_dummy(all_nominal_predictors()) |> 
+  step_pca(matches("(SF$)|(Gr_Liv)"), skip = TRUE)
+```
+
+# 4.0 Tidy a Recipe
+
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Neighborhood +
+           Gr_Liv_Area +
+           Year_Built +
+           Bldg_Type +
+           Latitude +
+           Longitude, 
+         data = ames_train) |> 
+  step_log(Gr_Liv_Area, base = 10) |> 
+  step_other(Neighborhood, threshold = 0.01, id = "ot") |> 
+  step_dummy(all_nominal_predictors()) |> 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_")) |> 
+  step_ns(Latitude, Longitude, deg_free = 20)
+
+tidy(ames_rec)
+```
+
+```{r}
+lm_wflow <- 
+  workflow() |> 
+  add_model(lm_model) |> 
+  add_recipe(ames_rec)
+
+lm_fit <- fit(lm_wflow, ames_train)
+```
+
+```{r}
+estimated_recipe <- 
+  lm_fit |> 
+  extract_recipe(estimated = TRUE)
+```
+
+
+
+```{r}
+tidy(ames_rec, 2)
+```
+
+# 4.0 Column Roles
+
+```{r}
+ames_rec |> 
+  add_role(Latitude, new_role = "predictor")
+```
+

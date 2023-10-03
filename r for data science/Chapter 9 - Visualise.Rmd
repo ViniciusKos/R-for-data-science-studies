@@ -1,0 +1,365 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+
+
+```{r}
+renv::restore()
+```
+
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+
+```
+
+```{r}
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+
+```{r}
+smaller <- diamonds |> filter(carat <3)
+ggplot(smaller, aes(x = carat)) +
+  geom_histogram( binwidth = 0.01)
+```
+
+```{r}
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+
+```{r}
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram(binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+```{r}
+unusual <- diamonds |> 
+  filter(y < 3 | y > 20) |> 
+  select(price, x, y, z) |> 
+  arrange(y)
+unusual
+```
+
+
+
+# 1.0 Variation:
+
+
+```{r}
+#1.0
+ggplot(diamonds, aes(x = x)) +
+  geom_histogram()
+
+ggplot(diamonds, aes(x = y)) +
+  geom_histogram()
+
+ggplot(diamonds, aes(x = z)) +
+  geom_histogram()
+
+
+#2.0
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 15)
+
+#3.0
+diamonds |> count(carat)
+
+#0.99 carat 23
+#1 carat 1558
+#maybe was a problem in data collectiony
+
+#4.0
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 100) +
+  coord_cartesian(xlim = c(0,2000))
+
+#The binwidth gets very big when you zoom and in and don't set its value.
+```
+
+# 2.0 Unusual Values
+
+
+```{r}
+#Replace null values with NA
+
+diamonds2 <- diamonds |> 
+  mutate(y = if_else(y < 3 | y > 20, NA, y))
+
+ggplot(diamonds2, aes(x = x, y = y)) +
+  geom_point()
+
+```
+
+```{r}
+```
+
+
+```{r}
+nycflights13::flights |> 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + (sched_min/60),
+  ) |> 
+  ggplot(aes(x = sched_dep_time)) +
+  geom_freqpoly(aes(color = cancelled), binwidth = 1/4)
+```
+
+```{r}
+#1)
+ggplot(diamonds2, aes(x = x, y = y)) +
+  geom_point()
+ggplot(diamonds2, aes(x = y)) +
+  geom_bar()
+#both histogram and barchart omits missing values
+
+#2)
+mean(diamonds$y)
+
+mean(diamonds$y, na.rm = TRUE)
+#na.rm remove the NAs before the computation
+
+#3)
+nycflights13::flights |> 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + (sched_min/60),
+  ) |> 
+  ggplot(aes(x = sched_dep_time)) +
+  geom_freqpoly(aes(color = cancelled)
+                , binwidth = 1/4
+                ) +
+  facet_grid(rows = vars(cancelled)
+             ,scales = "free_y"
+             ,shrink = TRUE
+             )
+```
+
+# 3.0 Covariation
+
+
+```{r}
+ggplot(diamonds, aes(x = price)) +
+  geom_freqpoly(aes(color = cut), binwidth = 500, linewidth = 0.75)
+```
+
+```{r}
+ggplot(diamonds, aes(x = price, y = after_stat(density))) +
+  geom_freqpoly(aes(color = cut), binwidth = 500, linewidth = 0.75)
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = price)) + geom_boxplot()
+```
+
+```{r}
+ggplot(mpg, aes(x = class, y = hwy)) + geom_boxplot()
+```
+
+```{r}
+ggplot(mpg, aes(x = fct_reorder(class, hwy, median) , y = hwy)) + geom_boxplot()
+```
+```{r}
+ggplot(mpg, aes(x = hwy, y = fct_reorder(class, hwy, median))) + geom_boxplot()
+```
+
+```{r}
+flight <- as_tibble(nycflights13::flights) |>
+  mutate( cancelled = is.na(dep_time) )
+head(flight)
+```
+
+## 3.1 Exercises
+
+```{r}
+ggplot(flight, aes(x = cancelled, y = dep_time)) +
+  geom_boxplot()
+```
+
+```{r}
+
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  print(i)
+}
+```
+
+
+
+```{r}
+
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  p <- ggplot(diamonds, aes(x = fct_reorder(diamonds[[i]], y, median), y = price)) +
+    geom_boxplot() +
+    #labs(x = i, y = "price",
+    #     title = glue::glue("Preço vs {i}"),
+    #     subtitle = "taptap") +
+    ggeasy::easy_center_title()
+  print(p)
+}
+```
+
+```{r}
+for (i in diamonds |> select(!where(is.numeric)) |> colnames()) {
+  p <- ggplot(diamonds, aes(x = diamonds[[i]], y=price)) +
+    lvplot::geom_lv() + 
+    labs(x = i)
+  print(p)
+}
+```
+
+```{r}
+ggplot(diamonds, aes( x = cut, y = price )) +
+  geom_violin()
+ggplot(diamonds, aes( x = price )) +
+  geom_histogram( binwidth = 1000) +
+  facet_grid( rows = vars(cut) )
+ggplot(diamonds, aes( x = price)) +
+  geom_freqpoly(aes(color=cut), linewidth=0.75)
+ggplot(diamonds, aes( x = price, fill=cut, colour=cut )) +
+  geom_density(alpha = 0.1)
+```
+
+
+```{r}
+ggplot(diamonds, aes( x = cut, y=price)) +
+  geom_jitter()
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = color)) +
+  geom_count()
+```
+
+```{r}
+diamonds |> count(color, cut) |> 
+  arrange(n) |> 
+  ggplot(aes(x = color, y = cut)) +
+  geom_tile(aes(fill = n))
+
+diamonds |> count(color, cut) |> 
+  arrange(n) |> 
+  ggplot(aes(x = color, y = n)) +
+  geom_tile(aes(fill = cut))
+
+flight |>  summarize(.by = c(dest, month), mean_dep_time = mean(dep_time)) |> 
+  ggplot(aes(y = dest, x = month)) +
+  geom_tile(aes(fill = mean_dep_time))
+```
+
+```{r}
+library(heatmaply)
+```
+
+```{r}
+heatmaply_cor(
+  cor(mtcars),
+  xlab = "Features",
+  ylab = "Features"
+)
+```
+
+```{r}
+diamonds |> group_by(cut, color) |> 
+  summarize(n = n()) |> 
+  mutate(n_wt = n/sum(n))
+```
+
+```{r}
+
+# Sample data
+data <- data.frame(
+  group = c("A", "A", "B", "B", "C", "C"),
+  subgroup = c("X", "Y", "X", "Y", "X", "Y"),
+  value = c(10, 20, 15, 25, 30, 40)
+)
+
+# Group by 'group' and 'subgroup', then calculate the percentage within subgroup
+result <- data %>%
+  group_by(group) %>%
+  mutate(subgroup_percentage = value / sum(value) * 100) |> 
+  ungroup() |> 
+  mutate(group_percentage = value / sum(value)*100)
+
+
+# Print the result
+print(result)
+result |> summarize(sum(group_percentage))
+```
+
+
+## 3.2 two numerical variables
+
+```{r}
+ggplot( smaller, aes(x = carat, y = price)) + 
+  geom_point(alpha = 1/100)
+
+ggplot(smaller, aes(x = carat, y = price)) +
+  geom_boxplot(aes(group = ntile(carat, 4)))
+
+ggplot(smaller, aes(x = carat, y = price)) +
+  geom_boxplot(aes(group = cut_number(carat, 4)))
+
+ggplot(smaller, aes(x = carat)) +
+  geom_freqpoly(aes(group = cut_number(carat, 4)))
+```
+
+```{r}
+ggplot(smaller, aes(x=cut_number(carat, 4), y=price)) + 
+  geom_boxplot() +
+  facet_grid(cols=vars(cut))
+```
+
+
+```{r}
+diamonds |> 
+  filter(x >= 4) |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  coord_cartesian(xlim = c(4, 11), ylim = c(4, 11))
+
+diamonds |> 
+  filter(x >= 4) |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_bin2d() +
+  coord_cartesian(xlim = c(4, 11), ylim = c(4, 11))
+```
+
+## 3.3 Patterns and Models
+
+```{r}
+
+diamonds <- diamonds |> 
+  mutate(
+    log_price = log(price),
+    log_carat = log(carat)
+  )
+diamonds_fit <- linear_reg() |> 
+  fit(log_price ~ log_carat, data = diamonds)
+
+diamonds_aug <- augment(diamonds_fit, new_data = diamonds) |> 
+  mutate(.resid = exp(.resid))
+
+ggplot(diamonds_aug, aes(x = carat, y = .resid)) +
+geom_point()
+```
+
+
+```{r}
+ggplot(diamonds_aug, aes(x = cut, y = .resid)) +
+geom_boxplot()
+```
+

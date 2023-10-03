@@ -1,0 +1,183 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# 0.0 Imports
+
+```{r}
+renv::snapshot()
+```
+
+```{r}
+options(scipen = 999)
+options(digits = 6)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+# 1.0 Explicit Missing Values
+
+```{r}
+treatment <- tribble(
+~person, ~treatment, ~response,
+"Derrick Whitmore", 1, 7,
+NA, 2, 10,
+NA, 3, NA,
+"Katherine Burke", 1, 4
+)
+head(treatment)
+```
+
+```{r}
+treatment |> 
+  fill(everything())
+```
+
+```{r}
+x <- c(1, 4, 5, 7, NA)
+coalesce(x, 0)
+```
+
+```{r}
+x <- c(1, 4, 5, 7, -99)
+na_if(x, -99)
+```
+
+```{r}
+0*Inf
+```
+
+
+# 2.0 Implicit Missing Values
+
+
+```{r}
+stocks <- tibble(
+year = c(2020, 2020, 2020, 2020, 2021, 2021, 2021),
+qtr = c( 1, 2, 3, 4, 2, 3, 4),
+price = c(1.88, 0.59, 0.35, NA, 0.92, 0.17, 2.66)
+)
+```
+
+
+```{r}
+stocks |> 
+  pivot_wider(
+    names_from = qtr,
+    values_from = price
+  )
+```
+
+```{r}
+stocks
+```
+
+
+```{r}
+stocks |> 
+  complete(year, qtr)
+```
+
+```{r}
+stocks |>
+  complete(year = 2019:2021, qtr)
+```
+
+```{r}
+library(nycflights13)
+
+
+
+flights |> 
+  distinct(faa = dest) |> 
+  anti_join(airports)
+
+
+flights |>
+  distinct(tailnum) |> 
+  anti_join(planes)
+```
+
+```{r}
+flights
+```
+
+# 3.0 Factors and Empty Groups
+
+```{r}
+health <- tibble(
+name = c("Ikaia", "Oletta", "Leriah", "Dashay", "Tresaun"),
+smoker = factor(c("no", "no", "no", "no", "no"), levels =
+c("yes", "no")),
+age = c(34, 88, 75, 47, 56),
+)
+
+health |> 
+  count(smoker)
+```
+
+```{r}
+health |> 
+  count(smoker, .drop = FALSE)
+```
+
+```{r}
+ggplot(health, aes(x = smoker)) +
+  geom_bar() +
+  scale_x_discrete()
+
+ggplot(health, aes(x = smoker)) +
+  geom_bar() +
+  scale_x_discrete( drop = FALSE)
+```
+
+```{r}
+health |> 
+  group_by(smoker) |> 
+  summarize(
+    n = n(),
+    mean_age = mean(age),
+    min_age = min(age),
+    max_age = max(age),
+    sd_age = sd(age)
+  ) |> 
+  complete(smoker) |> 
+  fill(everything(), .direction = "up")
+```
+
+```{r}
+health |> 
+  group_by(smoker) |> 
+  summarize(
+    n = n(),
+    mean_age = mean(age),
+    min_age = min(age),
+    max_age = max(age),
+    sd_age = sd(age)
+  ) |> 
+  complete(smoker) |> 
+  replace(is.na(.), 0)
+```
+
+
+```{r}
+df <- tibble(
+  group = c(1:2, 1, 2),
+  item_id = c(1:2, 2, 3),
+  item_name = c("a", "a", "b", "b"),
+  value1 = c(1, NA, 3, 4),
+  value2 = 4:7
+)
+df
+
+# Combinations --------------------------------------------------------------
+# Generate all possible combinations of `group`, `item_id`, and `item_name`
+# (whether or not they appear in the data)
+df |> complete(group)
+```
+
