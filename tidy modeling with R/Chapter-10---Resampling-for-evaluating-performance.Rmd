@@ -111,7 +111,7 @@ estimate_perf(rf_fit, ames_test)
 ```{r}
 estimate_perf(lm_fit, ames_test)
 ```
-# 1.0 Resampling methods
+# 10.1 Resampling methods
 
 ## 1.1 Cross-Validation
 
@@ -257,7 +257,7 @@ collect_metrics(val_res)
 ```
 
 
-# 2.0 Parallel Processing
+# 10.2 Parallel Processing
 
 
 Number of Cores
@@ -271,7 +271,7 @@ Number of independent processes that can be simutaneously used:
 parallel::detectCores(logical = TRUE)
 ```
 
-# 3.0 Saving the Resampled Objects
+# 10.3 Saving the Resampled Objects
 
 ```{r}
 ames_rec <-
@@ -328,7 +328,7 @@ all_coef <- map(lm_res$.extracts, ~ .x[[1]][[1]])
 all_coef
 ```
 
-# 4.0 Chapter Summary
+# 10.4 Chapter Summary
 
 ```{r}
 library(tidymodels)
@@ -382,6 +382,71 @@ set.seed(1003)
 
 rf_res <- rf_wflow %>% fit_resamples(resamples = ames_folds,
 control = keep_pred)
+
+```
+
+# Chapter 11 - Comparing Models with Resampling
+
+## 11.1 Creating Multiple Models with Workflow Sets
+
+```{r}
+library(tidymodels)
+tidymodels_prefer()
+basic_rec <-
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type +
+  Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>%
+  step_other(Neighborhood, threshold = 0.01) %>%
+  step_dummy(all_nominal_predictors())
+interaction_rec <-
+  basic_rec %>%
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") )
+spline_rec <-
+  interaction_rec %>%
+  step_ns(Latitude, Longitude, deg_free = 50)
+preproc <-
+  list(basic = basic_rec,
+  interact = interaction_rec,
+  splines = spline_rec)
+
+lm_models <- workflow_set(preproc, list(lm = linear_reg()), cross = FALSE)
+
+lm_models
+
+```
+
+```{r}
+lm_models <- 
+  lm_models |> 
+  workflow_map("fit_resamples",
+               seed = 123, verbose = TRUE,
+               resamples = ames_folds, control = keep_pred)
+
+lm_models
+```
+
+```{r}
+collect_metrics(lm_models) |> 
+  filter(.metric == "rmse")
+```
+
+
+```{r}
+four_models <- 
+  as_workflow_set(random_forest = rf_res) |> 
+  bind_rows(lm_models)
+four_models
+```
+```{r}
+library(ggrepel)
+
+autoplot(
+  four_models,
+  metric = "rsq") +
+  geom_text_repel(aes(label = wflow_id),
+                      nudge_x = 1/8,
+                      nudge_y = 1/100) +
+                    theme(legend.position = "none")
 
 ```
 
