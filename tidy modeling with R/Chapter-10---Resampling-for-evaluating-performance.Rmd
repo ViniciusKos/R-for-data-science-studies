@@ -130,9 +130,7 @@ ames_folds$splits[[1]] |> analysis() |> dim()
 
 ```{r}
 
-erro_padrão = desvio_padrao/raizquadrada(N)
 
-vfold_cv(ames_train, v = 10, repeats= 5)
 ```
 
 ## 1.3 Leave-One-Out Cross-Validation
@@ -448,5 +446,58 @@ autoplot(
                       nudge_y = 1/100) +
                     theme(legend.position = "none")
 
+```
+
+# 12. Model Tuning and the Dangers of Overfitting
+
+## 12.3 Tuning Parameters in Tidymodels
+
+```{r}
+neural_net_spec <- 
+  mlp(hidden_units = tune()) |> 
+  set_engine("keras")
+
+tune()
+
+extract_parameter_set_dials(neural_net_spec)
+```
+
+
+```{r}
+rf_spec <- 
+  rand_forest(mtry = tune()) |> 
+  set_engine("ranger", regularization.factor = tune("regularization")) |> 
+  set_mode("regression")
+
+rf_param <- extract_parameter_set_dials(rf_spec)
+rf_param
+```
+
+```{r}
+rf_param |> 
+  update(mtry = mtry(c(1, 70)))
+```
+
+```{r}
+pca_rec <- 
+  recipe(Sale_Price ~ ., data = ames_train) |> 
+  step_normalize(contains("SF")) |> 
+  step_pca(contains("SF"), threshold = .95)
+
+update_param <- 
+  workflow() |> 
+  add_model(rf_spec) |> 
+  add_recipe(pca_rec) |> 
+  extract_parameter_set_dials() |> 
+  finalize(ames_train)
+update_param
+```
+
+```{r}
+update_param |> extract_parameter_dials("mtry")
+```
+
+```{r}
+mtry()
 ```
 
