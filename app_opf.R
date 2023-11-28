@@ -20,36 +20,35 @@ sample_data <- data.frame(
 
 # Define UI
 ui <- dashboardPage(
-  dashboardHeader(title = "Monthly Total Sales"),
+  dashboardHeader(title = "Resultado Mensal Open Finance"),
   dashboardSidebar(),
   dashboardBody(
     fluidRow(
       box(
-        title = "Monthly Total Sales",
+        title = "VPL Mensal (R$)",
         width = 12,
-        status = "info",
-        solidHeader = TRUE,
-        plotlyOutput("linePlot")
+        status = "primary",
+        plotlyOutput("linePlot"),
+        solidheader = TRUE
       )
     ),
     fluidRow(
-      box(
-        title = "Options",
-        width = 4,
-        checkboxInput("accumulatedCheckbox", "Accumulated", value = FALSE),
-        checkboxInput("splitCheckbox", "Split", value = FALSE),
-        dateRangeInput("dateRange", "Date Range", start = min(sample_data$dtcontrato), end = max(sample_data$dtcontrato))
-      )
-    ),
-    fluidRow(
-      box(
-        title = "Monthly Sales Table",
-        width = 12,
-        DTOutput("salesTable")
+      column(4,box(
+        title = "Opções",
+        checkboxInput("accumulatedCheckbox", "Visao Acumulada", value = FALSE),
+        checkboxInput("splitCheckbox", "Por Produto", value = FALSE),
+        dateRangeInput("dateRange", "Data", start = min(sample_data$dtcontrato), end = max(sample_data$dtcontrato),
+                       format = "yyyy-mm-dd", language = 'pt-BR', separator = " até ",
+                       min = "2022-01-01", max = "2022-12-31"
+                       ))),
+      column(6,
+      box(width = 12,
+        title = "Analítico resultado mensal",
+        DTOutput("salesTable")))
+    )
       )
     )
-  )
-)
+
 
 # Define server logic
 server <- function(input, output) {
@@ -98,12 +97,14 @@ server <- function(input, output) {
     
     # Layout for the plot
     layout <- list(title = if (input$accumulatedCheckbox) "Accumulated Monthly Total Sales" else if (input$splitCheckbox) "Monthly Total Sales by Product" else "Monthly Total Sales",
-                   xaxis = list(title = "Date", tickvals = ~as.Date(paste0(filtered_data$dtcontrato, "-01")), tickformat = "%b %Y"),
-                   yaxis = list(title = if (input$accumulatedCheckbox) "Accumulated Total Sales (in '000s)" else if (input$splitCheckbox) "Total Sales per Product (in '000s)" else "Total Sales (in '000s)", rangemode = "tozero"))
+                   yaxis = list(title = if (input$accumulatedCheckbox) "Accumulated Total Sales (in '000s)" else if (input$splitCheckbox) "Total Sales per Product (in '000s)" else "Total Sales (in '000s)", rangemode = "tozero"),
+                   xaxis = list(title = "fufu"))
     
     # Combine the line plot and layout
     line_plot %>% layout(layout)
   })
+  
+  
   
   output$salesTable <- renderDT({
     # Pivot the data to create a table with products as rows, months as columns, and sales as values
@@ -112,24 +113,25 @@ server <- function(input, output) {
       group_by(product, month) %>%
       summarise(sales = sum(sales)) %>%
       pivot_wider(names_from = month, values_from = sales) %>%
-      arrange(product)
+      arrange(product) %>%
+      # Arrange columns in chronological order
+      select(product, order(names(.)))
+    
     # Display the table
     datatable(table_data,
-      extensions = 'Buttons',
-      options = list(
-      paging = TRUE,
-      searching = TRUE,
-      fixedColumns = TRUE,
-      autoWidth = TRUE,
-      ordering = TRUE,
-      dom = 'tB',
-      buttons = c('copy', 'excel'),
-      server = FALSE
-    ),
-              )
+              extensions = 'Buttons',
+              options = list(
+                paging = TRUE,
+                searching = TRUE,
+                fixedColumns = TRUE,
+                autoWidth = TRUE,
+                ordering = TRUE,
+                dom = 'tB',
+                buttons = c('copy', 'excel'),
+                server = FALSE
+              ),
+    )
   })
-  
-
 }
 
 # Run the application
