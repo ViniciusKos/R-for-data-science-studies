@@ -1,5 +1,5 @@
 # Install required packages if not already installed
-# install.packages(c("shiny", "shinydashboard", "dplyr", "plotly", "scales"))
+# install.packages(c("shiny", "shinydashboard", "dplyr", "plotly", "scales", "DT", "openxlsx"))
 
 # Load libraries
 library(shiny)
@@ -7,6 +7,9 @@ library(shinydashboard)
 library(dplyr)
 library(plotly)
 library(scales)
+library(DT)
+library(openxlsx)
+library(tidyr)
 
 # Sample dataset
 sample_data <- data.frame(
@@ -22,24 +25,27 @@ ui <- dashboardPage(
   dashboardBody(
     fluidRow(
       box(
-        title = "Date Range",
-        width = 3,
-        dateRangeInput("dateRange", "Date Range", start = min(sample_data$dtcontrato), end = max(sample_data$dtcontrato))
-      ),
-      box(
-        title = "Options",
-        width = 4,
-        checkboxInput("accumulatedCheckbox", "Accumulated", value = FALSE),
-        checkboxInput("splitCheckbox", "Split", value = FALSE)
-      )
-    ),
-    fluidRow(
-      box(
         title = "Monthly Total Sales",
         width = 12,
         status = "info",
         solidHeader = TRUE,
         plotlyOutput("linePlot")
+      )
+    ),
+    fluidRow(
+      box(
+        title = "Options",
+        width = 4,
+        checkboxInput("accumulatedCheckbox", "Accumulated", value = FALSE),
+        checkboxInput("splitCheckbox", "Split", value = FALSE),
+        dateRangeInput("dateRange", "Date Range", start = min(sample_data$dtcontrato), end = max(sample_data$dtcontrato))
+      )
+    ),
+    fluidRow(
+      box(
+        title = "Monthly Sales Table",
+        width = 12,
+        DTOutput("salesTable")
       )
     )
   )
@@ -98,6 +104,32 @@ server <- function(input, output) {
     # Combine the line plot and layout
     line_plot %>% layout(layout)
   })
+  
+  output$salesTable <- renderDT({
+    # Pivot the data to create a table with products as rows, months as columns, and sales as values
+    table_data <- sample_data %>%
+      mutate(month = format(dtcontrato, "%Y-%m")) %>%
+      group_by(product, month) %>%
+      summarise(sales = sum(sales)) %>%
+      pivot_wider(names_from = month, values_from = sales) %>%
+      arrange(product)
+    # Display the table
+    datatable(table_data,
+      extensions = 'Buttons',
+      options = list(
+      paging = TRUE,
+      searching = TRUE,
+      fixedColumns = TRUE,
+      autoWidth = TRUE,
+      ordering = TRUE,
+      dom = 'tB',
+      buttons = c('copy', 'excel'),
+      server = FALSE
+    ),
+              )
+  })
+  
+
 }
 
 # Run the application
